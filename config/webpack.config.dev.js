@@ -10,11 +10,7 @@ const paths = require('./paths')
 module.exports = ({ host, port }) => ({
   devtool: 'cheap-module-inline-source-map',
   entry: {
-    app: [
-      require.resolve('react-hot-loader/patch'),
-      require.resolve('react-dev-utils/webpackHotDevClient'),
-      paths.appIndexJs,
-    ],
+    app: [require.resolve('react-dev-utils/webpackHotDevClient'), paths.appIndexJs],
   },
   output: {
     pathinfo: true,
