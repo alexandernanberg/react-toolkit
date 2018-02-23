@@ -2,7 +2,8 @@ const webpack = require('webpack')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackPLugin = require('html-webpack-plugin')
-
+const WorkboxPlugin = require('workbox-webpack-plugin')
+const babelConfig = require('./babel')
 const paths = require('./paths')
 
 module.exports = {
@@ -24,6 +25,8 @@ module.exports = {
         loader: require.resolve('babel-loader'),
         options: {
           cacheDirectory: true,
+          babelrc: false,
+          ...babelConfig,
         },
       },
     ],
@@ -58,5 +61,6 @@ module.exports = {
       },
     }),
     new webpack.optimize.UglifyJsPlugin(),
+    new WorkboxPlugin.GenerateSW(),
   ],
 }
