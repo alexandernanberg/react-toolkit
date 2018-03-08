@@ -2,7 +2,6 @@
 
 process.env.NODE_ENV = 'production'
 
-const path = require('path')
 const chalk = require('chalk')
 const fs = require('fs-extra')
 const webpack = require('webpack')

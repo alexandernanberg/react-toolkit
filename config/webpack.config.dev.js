@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const HtmlWebpackPLugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
+const InterpolateHtmlPlugin = require('./WebpackPlugins/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const babelConfig = require('./babel')
 const paths = require('./paths')
@@ -10,7 +10,10 @@ const paths = require('./paths')
 module.exports = ({ host, port }) => ({
   devtool: 'cheap-module-inline-source-map',
   entry: {
-    app: [require.resolve('react-dev-utils/webpackHotDevClient'), paths.appIndexJs],
+    app: [
+      require.resolve('react-dev-utils/webpackHotDevClient'),
+      paths.appIndexJs,
+    ],
   },
   output: {
     pathinfo: true,
@@ -35,16 +38,16 @@ module.exports = ({ host, port }) => ({
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new CaseSensitivePathsPlugin(),
+    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    new HtmlWebpackPLugin({
+      template: paths.appHtml,
+      inject: true,
+    }),
+    new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
     new FriendlyErrorsPlugin({
       compilationSuccessInfo: {
         messages: [`Ready on http://${host}:${port}`],
       },
-    }),
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-    new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
-    new HtmlWebpackPLugin({
-      template: paths.appHtml,
-      inject: true,
     }),
   ],
 })

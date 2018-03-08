@@ -1,5 +1,4 @@
-const webpack = require('webpack')
-const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
+const InterpolateHtmlPlugin = require('./WebpackPlugins/InterpolateHtmlPlugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackPLugin = require('html-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
@@ -7,6 +6,7 @@ const babelConfig = require('./babel')
 const paths = require('./paths')
 
 module.exports = {
+  mode: 'production',
   devtool: 'sourcemap',
   entry: {
     app: [paths.appIndexJs],
@@ -32,18 +32,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.EnvironmentPlugin({ NODE_ENV: 'production' }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'common',
-      minChunks: module => module.context && module.context.indexOf('node_modules') !== -1,
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      minChunks: Infinity,
-    }),
-    new FriendlyErrorsPlugin(),
-    new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
     new HtmlWebpackPLugin({
       template: paths.appHtml,
       inject: true,
@@ -60,7 +48,8 @@ module.exports = {
         minifyURLs: true,
       },
     }),
-    new webpack.optimize.UglifyJsPlugin(),
+    new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
     new WorkboxPlugin.GenerateSW(),
+    new FriendlyErrorsPlugin(),
   ],
 }
