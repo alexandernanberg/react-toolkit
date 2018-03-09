@@ -3,11 +3,12 @@ const HtmlWebpackPLugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
-const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
+// const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const babelConfig = require('./babel')
 const paths = require('./paths')
 
 module.exports = ({ host, port }) => ({
+  mode: 'development',
   devtool: 'cheap-module-inline-source-map',
   entry: {
     app: [
@@ -38,7 +39,7 @@ module.exports = ({ host, port }) => ({
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new CaseSensitivePathsPlugin(),
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    // new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     new HtmlWebpackPLugin({
       template: paths.appHtml,
       inject: true,
