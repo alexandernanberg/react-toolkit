@@ -23,6 +23,9 @@ function copyPublicFolder() {
 function build() {
   console.log(chalk.blue('Creating a optimized production bundle...'))
 
+  fs.emptyDirSync(paths.appBuild)
+  copyPublicFolder()
+
   const compiler = webpack(config)
 
   compiler.run((err, stats) => {
@@ -30,6 +33,4 @@ function build() {
   })
 }
 
-fs.emptyDirSync(paths.appBuild)
-copyPublicFolder()
 build()

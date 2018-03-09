@@ -1,4 +1,4 @@
-const InterpolateHtmlPlugin = require('./WebpackPlugins/InterpolateHtmlPlugin')
+const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackPLugin = require('html-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
@@ -49,7 +49,9 @@ module.exports = {
       },
     }),
     new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
-    new WorkboxPlugin.GenerateSW(),
+    new WorkboxPlugin.InjectManifest({
+      swSrc: paths.appServiceWorker,
+    }),
     new FriendlyErrorsPlugin(),
   ],
 }
