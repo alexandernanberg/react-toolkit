@@ -1,19 +1,18 @@
 module.exports = {
   presets: [
     [
-      'env',
+      '@babel/env',
       {
         modules: false,
-        useBuiltIns: true,
       },
     ],
-    'react',
+    '@babel/react',
   ],
   plugins: [
     'preval',
-    'transform-class-properties',
-    'transform-object-rest-spread',
-    'syntax-dynamic-import',
+    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-proposal-object-rest-spread',
+    '@babel/plugin-syntax-dynamic-import',
     'react-hot-loader/babel',
     'styled-components',
   ],
