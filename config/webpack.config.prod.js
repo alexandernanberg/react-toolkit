@@ -2,7 +2,7 @@ const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackPLugin = require('html-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
-const babelConfig = require('./babel')
+const getBabelConfig = require('./getBabelConfig')
 const paths = require('./paths')
 
 module.exports = {
@@ -23,11 +23,7 @@ module.exports = {
         test: /\.(js|jsx|mjs)$/,
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
-        options: {
-          cacheDirectory: true,
-          babelrc: false,
-          ...babelConfig,
-        },
+        options: getBabelConfig(process.cwd()),
       },
     ],
   },

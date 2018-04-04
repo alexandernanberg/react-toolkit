@@ -4,12 +4,12 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
 // const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
-const babelConfig = require('./babel')
 const paths = require('./paths')
+const getBabelConfig = require('./getBabelConfig')
 
 module.exports = ({ host, port }) => ({
   mode: 'development',
-  devtool: 'cheap-module-inline-source-map',
+  devtool: 'cheap-module-source-map',
   entry: {
     app: [
       require.resolve('react-dev-utils/webpackHotDevClient'),
@@ -28,11 +28,7 @@ module.exports = ({ host, port }) => ({
         test: /\.(js|jsx|mjs)$/,
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
-        options: {
-          cacheDirectory: true,
-          babelrc: false,
-          ...babelConfig,
-        },
+        options: getBabelConfig(process.cwd()),
       },
     ],
   },
