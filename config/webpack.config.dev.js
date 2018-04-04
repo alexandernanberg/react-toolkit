@@ -43,7 +43,9 @@ module.exports = ({ host, port }) => ({
     new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
     new FriendlyErrorsPlugin({
       compilationSuccessInfo: {
-        messages: [`Ready on http://${host}:${port}`],
+        messages: [
+          `Ready on http://${host === '0.0.0.0' ? 'localhost' : host}:${port}`,
+        ],
       },
     }),
   ],
