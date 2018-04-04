@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = () => ({
   presets: [
     [
       '@babel/env',
@@ -16,4 +16,4 @@ module.exports = {
     'react-hot-loader/babel',
     'styled-components',
   ],
-}
+})
