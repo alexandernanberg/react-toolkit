@@ -1,12 +1,13 @@
 module.exports = () => ({
   presets: [
     [
-      '@babel/env',
+      '@babel/preset-env',
       {
         modules: false,
       },
     ],
-    '@babel/react',
+    '@babel/preset-react',
+    '@babel/preset-flow',
   ],
   plugins: [
     'preval',

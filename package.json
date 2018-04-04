@@ -1,7 +1,7 @@
 {
   "name": "@alexandernanberg/react-toolkit",
   "license": "MIT",
-  "version": "1.0.0-alpha.16",
+  "version": "1.0.0-alpha.17",
   "author": "Alexander Nanberg <alex.nanberg@hotmail.com> (https://alexandernanberg.com)",
   "description": "",
   "repository": {
@@ -12,8 +12,8 @@
     "url": "https://github.com/alexandernanberg/react-toolkit/issues"
   },
   "tags": [
-    "build-tool", 
-    "toolkit", 
+    "build-tool",
+    "toolkit",
     "zero-configuration"
   ],
   "scripts": {
@@ -23,9 +23,9 @@
     "react-toolkit": "bin/react-toolkit"
   },
   "files": [
-    "babel.js", 
-    "bin", 
-    "config", 
+    "babel.js",
+    "bin",
+    "config",
     "scripts"
   ],
   "dependencies": {
@@ -34,6 +34,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.44",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.44",
     "@babel/preset-env": "^7.0.0-beta.44",
+    "@babel/preset-flow": "^7.0.0-beta.44",
     "@babel/preset-react": "^7.0.0-beta.44",
     "babel-loader": "^8.0.0-beta.2",
     "babel-plugin-preval": "^1.6.4",
