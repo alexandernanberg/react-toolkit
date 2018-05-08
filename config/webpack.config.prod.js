@@ -28,7 +28,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPLugin({
+    new HtmlWebpackPlugin({
       template: paths.appHtml,
       inject: true,
       minify: {
