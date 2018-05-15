@@ -1,6 +1,6 @@
 const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const HtmlWebpackPLugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 const getBabelConfig = require('./getBabelConfig')
 const paths = require('./paths')
