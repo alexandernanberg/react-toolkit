@@ -1,8 +1,8 @@
-const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
-const getBabelConfig = require('./getBabelConfig')
+const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
+const getBabelConfig = require('../utils/getBabelConfig')
 const paths = require('./paths')
 
 module.exports = {

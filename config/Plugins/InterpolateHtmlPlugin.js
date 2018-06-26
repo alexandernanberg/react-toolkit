@@ -1,7 +1,5 @@
 // Temporary solution until react-scripts gets Webpack 4 support
 
-'use strict'
-
 const escapeStringRegexp = require('escape-string-regexp')
 
 class InterpolateHtmlPlugin {
@@ -16,12 +14,13 @@ class InterpolateHtmlPlugin {
         (data) => {
           Object.keys(this.replacements).forEach((key) => {
             const value = this.replacements[key]
+            // eslint-disable-next-line no-param-reassign
             data.html = data.html.replace(
               new RegExp(`%${escapeStringRegexp(key)}%`, 'g'),
-              value,
+              value
             )
           })
-        },
+        }
       )
     })
   }

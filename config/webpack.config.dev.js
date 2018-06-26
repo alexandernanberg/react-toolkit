@@ -5,7 +5,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
 // const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const paths = require('./paths')
-const getBabelConfig = require('./getBabelConfig')
+const getBabelConfig = require('../utils/getBabelConfig')
 
 module.exports = ({ host, port }) => ({
   mode: 'development',

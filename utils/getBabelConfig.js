@@ -1,7 +1,7 @@
 const { join } = require('path')
 const { loadPartialConfig, createConfigItem } = require('@babel/core')
 
-const babelPreset = createConfigItem(require('./babel-preset'), {
+const babelPreset = createConfigItem(require('../config/babel-preset'), {
   type: 'preset',
 })
 
