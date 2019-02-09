@@ -1,7 +1,6 @@
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const WorkboxPlugin = require('workbox-webpack-plugin')
-const InterpolateHtmlPlugin = require('./Plugins/InterpolateHtmlPlugin')
+const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const getBabelConfig = require('../utils/getBabelConfig')
 const paths = require('./paths')
 
@@ -45,9 +44,6 @@ module.exports = {
       },
     }),
     new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
-    new WorkboxPlugin.InjectManifest({
-      swSrc: paths.appServiceWorker,
-    }),
     new FriendlyErrorsPlugin(),
   ],
 }

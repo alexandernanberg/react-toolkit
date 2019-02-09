@@ -1,14 +1,6 @@
 {
-  "extends": ["airbnb-base", "prettier"],
-  "parser": "babel-eslint",
-  "plugins": [
-    "prettier"
-  ],
+  "extends": "alexandernanberg",
   "env": {
-		"node": true
-  },
-  "rules": {
-    "comma-dangle": ["error", "always-multiline"],
-    "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }]
+    "node": true
   }
 }

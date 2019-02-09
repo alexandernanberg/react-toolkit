@@ -1,5 +1,3 @@
-'use strict'
-
 process.env.NODE_ENV = 'development'
 
 const chalk = require('chalk')
