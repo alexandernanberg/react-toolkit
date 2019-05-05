@@ -2,5 +2,8 @@
   "extends": "alexandernanberg",
   "env": {
     "node": true
+  },
+  "rules": {
+    "global-require": 0
   }
 }

@@ -16,7 +16,7 @@ module.exports = ({ host, protocol }) => ({
   historyApiFallback: {
     disableDotRule: true,
   },
-  before: (app) => {
+  before: app => {
     app.use(errorOverlayMiddleware())
     app.use(noopServiceWorkerMiddleware())
   },
