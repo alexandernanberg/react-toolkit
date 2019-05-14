@@ -26,7 +26,8 @@
     "babel.js",
     "bin",
     "cli",
-    "config"
+    "config",
+    "lib"
   ],
   "dependencies": {
     "@babel/core": "^7.0.0",
