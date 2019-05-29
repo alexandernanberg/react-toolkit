@@ -27,6 +27,7 @@ module.exports = ({ host, port } = {}) => ({
     publicPath: paths.publicPath,
   },
   module: {
+    strictExportPresence: true,
     rules: [
       {
         test: /\.(js|jsx|mjs)$/,
