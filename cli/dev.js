@@ -1,5 +1,5 @@
 const arg = require('arg')
-const { startDevelopmentServer } = require('../lib/startDevelopmentServer')
+const startDevelopmentServer = require('../lib/startDevelopmentServer')
 
 const HOST = '0.0.0.0'
 const DEFAULT_PORT = 3000
