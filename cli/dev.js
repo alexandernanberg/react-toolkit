@@ -1,9 +1,6 @@
 const arg = require('arg')
 const startDevelopmentServer = require('../lib/startDevelopmentServer')
 
-const HOST = '0.0.0.0'
-const DEFAULT_PORT = 3000
-
 module.exports = async function dev(argv) {
   const args = arg(
     {
@@ -36,8 +33,8 @@ Options
     process.exit(0)
   }
 
-  const host = args['--hostname'] || HOST
-  const port = args['--port'] || DEFAULT_PORT
+  const host = args['--hostname']
+  const port = args['--port']
 
   startDevelopmentServer({ host, port })
 }
