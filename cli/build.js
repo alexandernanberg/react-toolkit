@@ -6,6 +6,7 @@ module.exports = async function build(argv) {
     {
       // Types
       '--help': Boolean,
+      '--analyze': Boolean,
 
       // Aliases
       '-h': '--help',
@@ -23,9 +24,10 @@ Usage
 
 Options
   --help, -h      Displays this message
+  --analyze       Analyzes the build
 `)
     process.exit(0)
   }
 
-  compile()
+  compile({ runAnalyzer: args['--analyze'] })
 }

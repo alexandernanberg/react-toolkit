@@ -1,4 +1,5 @@
 const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
+const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware')
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware')
 const paths = require('./paths')
 
@@ -6,7 +7,7 @@ module.exports = ({ host, protocol }) => ({
   disableHostCheck: true,
   compress: true,
   hot: true,
-  clientLogLevel: 'none',
+  clientLogLevel: 'silent',
   quiet: true,
   contentBase: paths.appPublic,
   publicPath: paths.publicPath,
@@ -16,7 +17,8 @@ module.exports = ({ host, protocol }) => ({
   historyApiFallback: {
     disableDotRule: true,
   },
-  before: app => {
+  before: (app, server) => {
+    app.use(evalSourceMapMiddleware(server))
     app.use(errorOverlayMiddleware())
     app.use(noopServiceWorkerMiddleware())
   },

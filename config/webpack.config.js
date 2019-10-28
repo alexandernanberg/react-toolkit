@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
@@ -9,9 +10,14 @@ const paths = require('./paths')
 
 const isDev = process.env.NODE_ENV === 'development'
 
-module.exports = ({ host, port } = {}) => ({
+function printSuccessMessage({ host, port }) {
+  return [`Ready on http://${host === '0.0.0.0' ? 'localhost' : host}:${port}`]
+}
+
+module.exports = ({ host, port, runAnalyzer } = {}) => ({
   mode: isDev ? 'development' : 'production',
-  devtool: isDev ? 'cheap-module-source-map' : 'sourcemap',
+  devtool: isDev ? 'cheap-module-source-map' : 'source-map',
+  performance: false,
   entry: {
     app: [
       isDev && require.resolve('react-dev-utils/webpackHotDevClient'),
@@ -34,8 +40,8 @@ module.exports = ({ host, port } = {}) => ({
         include: paths.appSrc,
         loader: path.join(__dirname, 'babel-loader.js'),
         options: {
+          cacheCompression: false,
           cacheDirectory: true,
-          babelrc: false,
         },
       },
     ],
@@ -64,15 +70,13 @@ module.exports = ({ host, port } = {}) => ({
     }),
     new InterpolateHtmlPlugin(HtmlWebpackPlugin, { PUBLIC_URL: '' }),
     new FriendlyErrorsPlugin({
+      clearConsole: isDev,
       compilationSuccessInfo: isDev
         ? {
-            messages: [
-              `Ready on http://${
-                host === '0.0.0.0' ? 'localhost' : host
-              }:${port}`,
-            ],
+            messages: printSuccessMessage({ host, port }),
           }
         : {},
     }),
+    runAnalyzer && new BundleAnalyzerPlugin(),
   ].filter(Boolean),
 })

@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+const chalk = require('chalk')
+
 module.exports = require('babel-loader').custom(babel => {
   const presetItem = babel.createConfigItem(require('./babel-preset'), {
     type: 'preset',
@@ -11,21 +14,24 @@ module.exports = require('babel-loader').custom(babel => {
         isDev: options.isDev,
       }
 
-      const loader = Object.assign({}, options)
+      const loader = { ...options }
       delete loader.isDev
 
       return { custom, loader }
     },
     config(cfg) {
-      const options = Object.assign({}, cfg.options)
+      const options = { ...cfg.options }
 
       if (cfg.hasFilesystemConfig()) {
         // eslint-disable-next-line no-restricted-syntax
         for (const file of [cfg.babelrc, cfg.config]) {
           if (file && !configs.has(file)) {
             configs.add(file)
-            console.log(`> Using external babel configuration`)
-            console.log(`> Location: "${file}"`)
+            console.log(
+              `${chalk.bgBlue.black(
+                ' I '
+              )} Using external babel configuration: "${file}"\n`
+            )
           }
         }
       } else {
