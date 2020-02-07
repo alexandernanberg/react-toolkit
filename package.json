@@ -17,7 +17,8 @@
     "zero-configuration"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "bin": {
     "react-toolkit": "cli.js"
@@ -30,34 +31,36 @@
     "lib"
   ],
   "dependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/plugin-proposal-class-properties": "^7.5.0",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.6.3",
-    "@babel/preset-react": "^7.6.3",
-    "arg": "^4.1.0",
-    "babel-loader": "^8.0.0",
-    "babel-plugin-macros": "^2.2.1",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
+    "arg": "^4.1.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-macros": "^2.6.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "case-sensitive-paths-webpack-plugin": "^2.1.2",
-    "chalk": "^2.4.1",
-    "core-js": "^3.3.2",
-    "cosmiconfig": "^5.2.1",
-    "friendly-errors-webpack-plugin": "^2.0.0-beta.2",
-    "fs-extra": "^8.0.0",
-    "html-webpack-plugin": "^4.0.0-beta.8",
+    "case-sensitive-paths-webpack-plugin": "^2.2.0",
+    "chalk": "^3.0.0",
+    "core-js": "^3.4.0",
+    "cosmiconfig": "^6.0.0",
+    "error-stack-parser": "^2.0.6",
+    "fs-extra": "^8.1.0",
+    "html-webpack-plugin": "^4.0.0-beta.11",
     "portscanner": "^2.2.0",
-    "react-dev-utils": "^9.0.0",
-    "webpack": "^4.8.3",
+    "react-dev-utils": "^9.1.0",
+    "string-width": "^4.2.0",
+    "strip-ansi": "^6.0.0",
+    "webpack": "^4.41.2",
     "webpack-bundle-analyzer": "^3.6.0",
-    "webpack-dev-server": "^3.1.4",
+    "webpack-dev-server": "^3.9.0",
     "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
-    "eslint": "^6.2.0",
+    "eslint": "^6.6.0",
     "eslint-config-alexandernanberg": "^1.11.0",
-    "prettier": "^1.12.1"
+    "prettier": "^1.18.2"
   }
 }

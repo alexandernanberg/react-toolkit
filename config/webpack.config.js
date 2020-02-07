@@ -2,10 +2,10 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
+const FriendlyErrorsPlugin = require('../lib/FriendlyWebpackPlugin')
 const paths = require('./paths')
 
 const isDev = process.env.NODE_ENV === 'development'
