@@ -5,7 +5,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
-const FriendlyErrorsPlugin = require('../lib/FriendlyWebpackPlugin')
+const FriendlyOutputPlugin = require('../lib/FriendlyOutputWebpackPlugin')
 const paths = require('./paths')
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -69,7 +69,7 @@ module.exports = ({ host, port, runAnalyzer } = {}) => ({
         : undefined,
     }),
     new InterpolateHtmlPlugin(HtmlWebpackPlugin, { PUBLIC_URL: '' }),
-    new FriendlyErrorsPlugin({
+    new FriendlyOutputPlugin({
       clearConsole: isDev,
       compilationSuccessInfo: isDev
         ? {

@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-const chalk = require('chalk')
+const output = require('../lib/FriendlyOutputWebpackPlugin/src/output')
 
 module.exports = require('babel-loader').custom(babel => {
   const presetItem = babel.createConfigItem(require('./babel-preset'), {
@@ -27,11 +26,7 @@ module.exports = require('babel-loader').custom(babel => {
         for (const file of [cfg.babelrc, cfg.config]) {
           if (file && !configs.has(file)) {
             configs.add(file)
-            console.log(
-              `${chalk.bgBlue.black(
-                ' I '
-              )} Using external babel configuration: "${file}"\n`
-            )
+            output.info(`Using external babel configuration: "${file}"`)
           }
         }
       } else {
