@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const arg = require('arg')
 const startDevelopmentServer = require('../lib/startDevelopmentServer')
 

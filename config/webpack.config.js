@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const FriendlyOutputPlugin = require('../lib/FriendlyOutputWebpackPlugin')
 const paths = require('./paths')
@@ -42,12 +43,16 @@ module.exports = ({ host, port, runAnalyzer } = {}) => ({
         options: {
           cacheCompression: false,
           cacheDirectory: true,
+          plugins: [isDev && require.resolve('react-refresh/babel')].filter(
+            Boolean
+          ),
         },
       },
     ],
   },
   plugins: [
     isDev && new webpack.HotModuleReplacementPlugin(),
+    isDev && new ReactRefreshWebpackPlugin({ disableRefreshCheck: true }),
     isDev && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     new CaseSensitivePathsPlugin(),
     new HtmlWebpackPlugin({

@@ -1,6 +1,5 @@
 const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
 const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware')
-const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware')
 const paths = require('./paths')
 
 module.exports = ({ host, protocol }) => ({
@@ -20,6 +19,5 @@ module.exports = ({ host, protocol }) => ({
   before: (app, server) => {
     app.use(evalSourceMapMiddleware(server))
     app.use(errorOverlayMiddleware())
-    app.use(noopServiceWorkerMiddleware())
   },
 })

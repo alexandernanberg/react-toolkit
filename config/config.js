@@ -1,4 +1,4 @@
-const cosmiconfig = require('cosmiconfig')
+const { cosmiconfig } = require('cosmiconfig')
 const { name } = require('../package.json')
 
 const explorer = cosmiconfig(name, {
@@ -20,8 +20,7 @@ function normalizeConfig(config) {
 
 exports.loadConfig = async function getOptions() {
   const { config: userConfig } = await explorer.search()
-
-  const config = normalizeConfig(userConfig)
+  const config = { ...defaultConfig, ...normalizeConfig(userConfig) }
 
   return config
 }
