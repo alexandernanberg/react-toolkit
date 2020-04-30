@@ -1,6 +1,6 @@
 const output = require('../lib/FriendlyOutputWebpackPlugin/src/output')
 
-module.exports = require('babel-loader').custom(babel => {
+module.exports = require('babel-loader').custom((babel) => {
   const presetItem = babel.createConfigItem(require('./babel-preset'), {
     type: 'preset',
   })

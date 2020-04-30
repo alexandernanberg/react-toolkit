@@ -62,4 +62,4 @@ if (args['--help']) {
 const defaultEnv = command === 'dev' ? 'development' : 'production'
 process.env.NODE_ENV = process.env.NODE_ENV || defaultEnv
 
-commands[command]().then(exec => exec(forwardedArgs))
+commands[command]().then((exec) => exec(forwardedArgs))

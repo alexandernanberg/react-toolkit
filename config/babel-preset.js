@@ -3,25 +3,35 @@ const isDevelopment = env === 'development'
 const isProduction = env === 'production'
 const isTest = env === 'test'
 
-const useESModules = !isTest
+const modules = process.env.BABEL_MODULES || false
+const useESModules = !modules && (isDevelopment || isProduction)
 
 module.exports = (api, options = {}) => {
-  api.cache(true)
+  api.cache.using(() => process.env.NODE_ENV)
 
   return {
     presets: [
-      [
-        '@babel/preset-env',
+      isTest && [
+        require.resolve('@babel/preset-env'),
         {
-          modules: isTest ? 'commonjs' : false,
+          targets: {
+            node: 'current',
+          },
+        },
+      ],
+      (isDevelopment || isProduction) && [
+        require.resolve('@babel/preset-env'),
+        {
+          modules,
           useBuiltIns: 'usage',
           corejs: 3,
+          // Exclude transforms that make all code slower
           exclude: ['transform-typeof-symbol'],
           ...options['preset-env'],
         },
       ],
       [
-        '@babel/preset-react',
+        require.resolve('@babel/preset-react'),
         {
           useBuiltIns: true,
           development: isDevelopment || isTest,
@@ -31,12 +41,37 @@ module.exports = (api, options = {}) => {
     ],
     plugins: [
       [
-        '@babel/plugin-proposal-class-properties',
+        require.resolve('@babel/plugin-transform-destructuring'),
+        {
+          // Use loose mode for performance
+          loose: false,
+          useBuiltIns: true,
+          selectiveLoose: [
+            'useState',
+            'useEffect',
+            'useContext',
+            'useReducer',
+            'useCallback',
+            'useMemo',
+            'useRef',
+            'useImperativeHandle',
+            'useLayoutEffect',
+            'useDebugValue',
+          ],
+        },
+      ],
+      [
+        require.resolve('@babel/plugin-proposal-class-properties'),
         { loose: true, ...options['class-properties'] },
       ],
-      ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
       [
-        '@babel/plugin-transform-runtime',
+        require.resolve('@babel/plugin-proposal-object-rest-spread'),
+        { loose: true, useBuiltIns: true },
+      ],
+      require.resolve('@babel/plugin-proposal-optional-chaining'),
+      require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
+      [
+        require.resolve('@babel/plugin-transform-runtime'),
         {
           useESModules,
           helpers: false,
@@ -47,10 +82,10 @@ module.exports = (api, options = {}) => {
           ...options['transform-runtime'],
         },
       ],
-      '@babel/plugin-syntax-dynamic-import',
-      'babel-plugin-macros',
+      require.resolve('@babel/plugin-syntax-dynamic-import'),
+      require.resolve('babel-plugin-macros'),
       isProduction && [
-        'babel-plugin-transform-react-remove-prop-types',
+        require.resolve('babel-plugin-transform-react-remove-prop-types'),
         {
           removeImport: true,
         },
