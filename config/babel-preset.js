@@ -35,31 +35,12 @@ module.exports = (api, options = {}) => {
         {
           useBuiltIns: true,
           development: isDevelopment || isTest,
+          runtime: 'automatic',
           ...options['preset-react'],
         },
       ],
-    ],
+    ].filter(Boolean),
     plugins: [
-      [
-        require.resolve('@babel/plugin-transform-destructuring'),
-        {
-          // Use loose mode for performance
-          loose: false,
-          useBuiltIns: true,
-          selectiveLoose: [
-            'useState',
-            'useEffect',
-            'useContext',
-            'useReducer',
-            'useCallback',
-            'useMemo',
-            'useRef',
-            'useImperativeHandle',
-            'useLayoutEffect',
-            'useDebugValue',
-          ],
-        },
-      ],
       [
         require.resolve('@babel/plugin-proposal-class-properties'),
         { loose: true, ...options['class-properties'] },

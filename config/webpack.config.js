@@ -52,7 +52,7 @@ module.exports = ({ host, port, runAnalyzer } = {}) => ({
   },
   plugins: [
     isDev && new webpack.HotModuleReplacementPlugin(),
-    isDev && new ReactRefreshWebpackPlugin({ disableRefreshCheck: true }),
+    isDev && new ReactRefreshWebpackPlugin(),
     isDev && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     new CaseSensitivePathsPlugin(),
     new HtmlWebpackPlugin({
