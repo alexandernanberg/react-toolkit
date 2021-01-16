@@ -2,15 +2,16 @@ const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
 const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware')
 const paths = require('./paths')
 
-module.exports = ({ host, protocol }) => ({
+module.exports = (host) => ({
   disableHostCheck: true,
   compress: true,
-  hot: true,
   clientLogLevel: 'silent',
   quiet: true,
+  hot: true,
+  transportMode: 'ws',
+  injectClient: false,
   contentBase: paths.appPublic,
   publicPath: paths.publicPath,
-  https: protocol === 'https',
   host,
   overlay: false,
   historyApiFallback: {

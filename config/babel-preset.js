@@ -1,8 +1,7 @@
-const env = process.env.NODE_ENV
+const env = process.env.NODE_ENV || 'production'
 const isDevelopment = env === 'development'
 const isProduction = env === 'production'
 const isTest = env === 'test'
-
 const modules = process.env.BABEL_MODULES || false
 const useESModules = !modules && (isDevelopment || isProduction)
 
@@ -23,6 +22,7 @@ module.exports = (api, options = {}) => {
         require.resolve('@babel/preset-env'),
         {
           modules,
+          bugfixes: true,
           useBuiltIns: 'usage',
           corejs: 3,
           // Exclude transforms that make all code slower

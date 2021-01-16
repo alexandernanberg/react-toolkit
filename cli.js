@@ -34,6 +34,16 @@ if (args['--version']) {
   process.exit(0)
 }
 
+if (!foundCommand && !!args._[0]) {
+  console.log(`
+Unknown command "${args._[0]}"
+
+For more information on available commands use the --help flag
+  $ react-toolkit --help
+`)
+  process.exit(0)
+}
+
 if (!foundCommand && args['--help']) {
   console.log(`
 Usage
@@ -58,8 +68,5 @@ const forwardedArgs = foundCommand ? args._.slice(1) : args._
 if (args['--help']) {
   forwardedArgs.push('--help')
 }
-
-const defaultEnv = command === 'dev' ? 'development' : 'production'
-process.env.NODE_ENV = process.env.NODE_ENV || defaultEnv
 
 commands[command]().then((exec) => exec(forwardedArgs))

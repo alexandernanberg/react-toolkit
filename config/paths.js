@@ -6,11 +6,12 @@ const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath)
 
 module.exports = {
   appBuild: resolveApp('dist'),
-  appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveApp('src/index.js'),
+  appNodeModules: resolveApp('node_modules'),
   appPackageJson: resolveApp('package.json'),
+  appPath: resolveApp('.'),
+  appPublic: resolveApp('public'),
   appSrc: resolveApp('src'),
   publicPath: '/',
-  appNodeModules: resolveApp('node_modules'),
 }

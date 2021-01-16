@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
+process.env.NODE_ENV = 'development'
+process.env.BABEL_ENV = 'development'
+
 const arg = require('arg')
-const startDevelopmentServer = require('../lib/startDevelopmentServer')
+const startDevServer = require('../lib/startDevServer')
 
 module.exports = async function dev(argv) {
   const args = arg(
@@ -37,5 +40,5 @@ Options
   const host = args['--hostname']
   const port = args['--port']
 
-  startDevelopmentServer({ host, port })
+  startDevServer({ host, port })
 }

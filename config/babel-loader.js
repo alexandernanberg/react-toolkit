@@ -1,5 +1,3 @@
-const output = require('../lib/FriendlyOutputWebpackPlugin/src/output')
-
 module.exports = require('babel-loader').custom((babel) => {
   const presetItem = babel.createConfigItem(require('./babel-preset'), {
     type: 'preset',
@@ -22,11 +20,11 @@ module.exports = require('babel-loader').custom((babel) => {
       const options = { ...cfg.options }
 
       if (cfg.hasFilesystemConfig()) {
-        // eslint-disable-next-line no-restricted-syntax
         for (const file of [cfg.babelrc, cfg.config]) {
           if (file && !configs.has(file)) {
             configs.add(file)
-            output.info(`Using external babel configuration: "${file}"`)
+            // eslint-disable-next-line no-console
+            console.log(`Using external babel configuration: "${file}"`)
           }
         }
       } else {
