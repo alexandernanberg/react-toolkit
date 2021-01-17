@@ -7,6 +7,7 @@ const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 const paths = require('./paths')
 
 const webpackDevClientEntry = require.resolve(
@@ -80,6 +81,14 @@ module.exports = function createWebpackConfig({ runAnalyzer, profile }) {
             cacheDirectory: true,
           },
         },
+        {
+          test: /\.svg$/,
+          use: [
+            {
+              loader: '@svgr/webpack',
+            },
+          ],
+        },
       ],
     },
     plugins: [
@@ -131,6 +140,29 @@ module.exports = function createWebpackConfig({ runAnalyzer, profile }) {
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       isDev && new CaseSensitivePathsPlugin(),
+      // Generate an asset manifest file with the following content:
+      // - "files" key: Mapping of all asset filenames to their corresponding
+      //   output file so that tools can pick it up without having to parse
+      //   `index.html`
+      // - "entrypoints" key: Array of files which are included in `index.html`,
+      //   can be used to reconstruct the HTML if necessary
+      new WebpackManifestPlugin({
+        fileName: 'asset-manifest.json',
+        generate: (seed, files, entrypoints) => {
+          const manifestFiles = files.reduce((acc, file) => {
+            acc[file.name] = file.path
+            return acc
+          }, seed)
+          const entrypointFiles = entrypoints.app.filter(
+            (fileName) => !fileName.endsWith('.map')
+          )
+
+          return {
+            files: manifestFiles,
+            entrypoints: entrypointFiles,
+          }
+        },
+      }),
       // If you require a missing module and then `npm install` it, you still have
       // to restart the development server for webpack to discover it. This plugin
       // makes the discovery automatic so you don't have to restart.
