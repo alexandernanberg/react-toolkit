@@ -3,7 +3,22 @@ process.env.NODE_ENV = 'development'
 process.env.BABEL_ENV = 'development'
 
 const arg = require('arg')
-const startDevServer = require('../lib/startDevServer')
+const webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
+const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
+const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
+const clearConsole = require('react-dev-utils/clearConsole')
+const chalk = require('react-dev-utils/chalk')
+const paths = require('../config/paths')
+const createWebpackConfig = require('../config/webpack.config')
+const createDevServerConfig = require('../config/webpackDevServer.config')
+const { loadConfig } = require('../config/config')
+const createDevCompiler = require('../lib/createDevCompiler')
+
+const isInteractive = process.stdout.isTTY
+
+const HOST = '0.0.0.0'
+const PORT = 3000
 
 module.exports = async function dev(argv) {
   const args = arg(
@@ -37,8 +52,31 @@ Options
     process.exit(0)
   }
 
-  const host = args['--hostname']
-  const port = args['--port']
+  const host = args['--hostname'] || HOST
+  const port = args['--port'] || PORT
 
-  startDevServer({ host, port })
+  const config = await loadConfig()
+
+  if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
+    process.exit(1)
+  }
+
+  const urls = prepareUrls('http', host, port, paths.publicPath.slice(0, -1))
+  const webpackConfig = createWebpackConfig({}, config)
+  const serverConfig = createDevServerConfig(urls.lanUrlForConfig)
+  const compiler = createDevCompiler({ config: webpackConfig, webpack, urls })
+  const devServer = new WebpackDevServer(compiler, serverConfig)
+
+  devServer.listen(port, host, (err) => {
+    if (err) {
+      console.log(err)
+      return
+    }
+
+    if (isInteractive) {
+      clearConsole()
+    }
+
+    console.log(chalk.cyan('Starting the development server...\n'))
+  })
 }
