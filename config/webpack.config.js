@@ -17,10 +17,14 @@ const webpackDevClientEntry = require.resolve(
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 
-module.exports = function createWebpackConfig({ runAnalyzer, profile }) {
+module.exports = function createWebpackConfig(
+  { runAnalyzer, profile },
+  config
+) {
   const isProdProfile = isProd && profile
+  const getUserWebpackConfig = config.webpack
 
-  return {
+  const webpackConfig = {
     mode: isDev ? 'development' : 'production',
     devtool: isDev ? 'cheap-module-source-map' : 'source-map',
     // Fail out on the first error instead of tolerating it.
@@ -171,4 +175,10 @@ module.exports = function createWebpackConfig({ runAnalyzer, profile }) {
       runAnalyzer && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
   }
+
+  if (getUserWebpackConfig) {
+    return getUserWebpackConfig(webpackConfig)
+  }
+
+  return webpackConfig
 }
