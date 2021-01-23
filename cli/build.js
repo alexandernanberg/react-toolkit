@@ -61,8 +61,8 @@ Options
     process.exit(0)
   }
 
-  const runAnalyzer = args['--analyze']
-  const runProfile = args['--profile']
+  const analyzeBundle = args['--analyze']
+  const reactProductionProfiling = args['--profile']
 
   const config = await loadConfig()
 
@@ -82,10 +82,11 @@ Options
 
   copyPublicFolder()
 
-  const compilerConfig = createWebpackConfig(
-    { runAnalyzer, profile: runProfile },
-    config
-  )
+  const compilerConfig = createWebpackConfig({
+    config,
+    analyzeBundle,
+    reactProductionProfiling,
+  })
   const compiler = webpack(compilerConfig)
 
   compiler.run((error, stats) => {
@@ -126,7 +127,7 @@ Options
       console.log(messages.warnings.join('\n\n'))
     }
 
-    if (!runAnalyzer) {
+    if (!analyzeBundle) {
       console.log('File sizes after gzip:\n')
       printFileSizesAfterBuild(
         stats,

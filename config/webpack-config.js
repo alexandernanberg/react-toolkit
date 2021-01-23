@@ -17,11 +17,11 @@ const webpackDevClientEntry = require.resolve(
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 
-module.exports = function createWebpackConfig(
-  { runAnalyzer, profile },
-  config
-) {
-  const isProdProfile = isProd && profile
+module.exports = function createWebpackConfig({
+  config,
+  analyzeBundle = false,
+  reactProductionProfiling = false,
+}) {
   const getUserWebpackConfig = config.webpack
 
   const webpackConfig = {
@@ -50,7 +50,7 @@ module.exports = function createWebpackConfig(
     resolve: {
       alias: {
         // Allows for better profiling with ReactDevTools.
-        ...(isProdProfile && {
+        ...(reactProductionProfiling && {
           'react-dom$': 'react-dom/profiling',
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
@@ -172,7 +172,7 @@ module.exports = function createWebpackConfig(
       // makes the discovery automatic so you don't have to restart.
       isDev && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
       // Visual and interactive bundle analyzer in the browser.
-      runAnalyzer && new BundleAnalyzerPlugin(),
+      analyzeBundle && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
   }
 

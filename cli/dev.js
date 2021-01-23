@@ -61,7 +61,7 @@ Options
   }
 
   const urls = prepareUrls('http', host, port, paths.publicPath.slice(0, -1))
-  const webpackConfig = createWebpackConfig({}, config)
+  const webpackConfig = createWebpackConfig({ config })
   const serverConfig = createDevServerConfig(urls.lanUrlForConfig)
   const compiler = createCompiler({ config: webpackConfig, webpack, urls })
   const devServer = new WebpackDevServer(compiler, serverConfig)

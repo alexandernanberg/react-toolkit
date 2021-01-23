@@ -10,17 +10,17 @@ const defaultConfig = {
   webpackDevMiddleware: null,
 }
 
-function normalizeConfig(config) {
-  if (typeof config === 'function') {
-    return config({ defaultConfig })
+exports.loadConfig = async function getOptions() {
+  const result = await explorer.search()
+
+  if (result) {
+    const userConfig =
+      typeof result.config === 'function'
+        ? result.config({ config: defaultConfig })
+        : result.config
+
+    return { ...defaultConfig, ...userConfig }
   }
 
-  return config
-}
-
-exports.loadConfig = async function getOptions() {
-  const { config: userConfig } = await explorer.search()
-  const config = { ...defaultConfig, ...normalizeConfig(userConfig) }
-
-  return config
+  return defaultConfig
 }
