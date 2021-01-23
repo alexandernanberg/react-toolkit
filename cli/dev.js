@@ -8,7 +8,6 @@ const WebpackDevServer = require('webpack-dev-server')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
 const clearConsole = require('react-dev-utils/clearConsole')
-const chalk = require('react-dev-utils/chalk')
 const paths = require('../config/paths')
 const createWebpackConfig = require('../config/webpack.config')
 const createDevServerConfig = require('../config/webpackDevServer.config')
@@ -77,6 +76,6 @@ Options
       clearConsole()
     }
 
-    console.log(chalk.cyan('Starting the development server...\n'))
+    console.log('Starting the development server...\n')
   })
 }
