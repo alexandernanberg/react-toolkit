@@ -9,10 +9,10 @@ const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
 const clearConsole = require('react-dev-utils/clearConsole')
 const paths = require('../config/paths')
-const createWebpackConfig = require('../config/webpack.config')
-const createDevServerConfig = require('../config/webpackDevServer.config')
+const createWebpackConfig = require('../config/webpack-config')
+const createDevServerConfig = require('../config/webpack-dev-server-config')
 const { loadConfig } = require('../config/config')
-const createDevCompiler = require('../lib/createDevCompiler')
+const { createCompiler } = require('../lib/webpack-dev-utils')
 
 const isInteractive = process.stdout.isTTY
 
@@ -63,7 +63,7 @@ Options
   const urls = prepareUrls('http', host, port, paths.publicPath.slice(0, -1))
   const webpackConfig = createWebpackConfig({}, config)
   const serverConfig = createDevServerConfig(urls.lanUrlForConfig)
-  const compiler = createDevCompiler({ config: webpackConfig, webpack, urls })
+  const compiler = createCompiler({ config: webpackConfig, webpack, urls })
   const devServer = new WebpackDevServer(compiler, serverConfig)
 
   devServer.listen(port, host, (err) => {

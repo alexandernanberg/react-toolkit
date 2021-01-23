@@ -10,7 +10,7 @@ const clearConsole = require('react-dev-utils/clearConsole')
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter')
 const chalk = require('react-dev-utils/chalk')
-const createWebpackConfig = require('../config/webpack.config')
+const createWebpackConfig = require('../config/webpack-config')
 const paths = require('../config/paths')
 const { loadConfig } = require('../config/config')
 
