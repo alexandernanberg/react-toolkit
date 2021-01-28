@@ -9,6 +9,7 @@ const defaultCommand = 'dev'
 const commands = {
   dev: async () => require('./cli/dev'),
   build: async () => require('./cli/build'),
+  start: async () => require('./cli/start'),
 }
 
 const args = arg(

@@ -7,9 +7,9 @@ const fs = require('fs-extra')
 const webpack = require('webpack')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const clearConsole = require('react-dev-utils/clearConsole')
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
+const chalk = require('chalk')
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter')
-const chalk = require('react-dev-utils/chalk')
+const formatWebpackMessages = require('../lib/webpack-format-messages')
 const createWebpackConfig = require('../config/webpack-config')
 const paths = require('../config/paths')
 const { loadConfig } = require('../config/config')
@@ -66,27 +66,37 @@ Options
 
   const config = await loadConfig()
 
-  if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
+  if (!checkRequiredFiles([paths.appServer, paths.appClient])) {
     process.exit(1)
   }
 
   const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild)
 
   if (isInteractive) {
-    clearConsole()
+    // clearConsole()
   }
 
   console.log('Creating an optimized production build...\n')
 
   fs.emptyDirSync(paths.appBuild)
 
-  copyPublicFolder()
+  // copyPublicFolder()
 
-  const compilerConfig = createWebpackConfig({
-    config,
-    analyzeBundle,
-    reactProductionProfiling,
-  })
+  const compilerConfig = [
+    createWebpackConfig({
+      isServer: true,
+      config,
+      analyzeBundle,
+      reactProductionProfiling,
+    }),
+    createWebpackConfig({
+      isServer: false,
+      config,
+      analyzeBundle,
+      reactProductionProfiling,
+    }),
+  ]
+
   const compiler = webpack(compilerConfig)
 
   compiler.run((error, stats) => {

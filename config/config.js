@@ -13,13 +13,17 @@ const defaultConfig = {
 exports.loadConfig = async function getOptions() {
   const result = await explorer.search()
 
+  // User has provided a custom config.
   if (result) {
     const userConfig =
       typeof result.config === 'function'
         ? result.config({ config: defaultConfig })
         : result.config
 
-    return { ...defaultConfig, ...userConfig }
+    return {
+      ...defaultConfig,
+      ...userConfig,
+    }
   }
 
   return defaultConfig

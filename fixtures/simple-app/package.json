@@ -1,0 +1,30 @@
+{
+  "name": "@react-toolkit/simple-app",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "react-toolkit dev",
+    "build": "react-toolkit build",
+    "start": "react-toolkit start"
+  },
+  "dependencies": {
+    "history": "link:../../node_modules/history",
+    "react": "link:../../node_modules/react",
+    "react-dom": "link:../../node_modules/react-dom",
+    "react-router": "link:../../node_modules/react-router",
+    "react-router-dom": "link:../../node_modules/react-router-dom",
+    "react-toolkit": "link:../../",
+    "styled-components": "^5.2.1",
+    "url": "^0.11.0"
+  },
+  "eslintConfig": {
+    "rules": {
+      "react/react-in-jsx-scope": "off"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/parser": "^7.12.11",
+    "babel-plugin-styled-components": "^1.12.0"
+  }
+}

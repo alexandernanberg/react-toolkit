@@ -1,51 +1,50 @@
 const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
-const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 const paths = require('./paths')
-
-const webpackDevClientEntry = require.resolve(
-  'react-dev-utils/webpackHotDevClient'
-)
 
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = function createWebpackConfig({
   config,
+  isServer = true,
   analyzeBundle = false,
   reactProductionProfiling = false,
 }) {
   const getUserWebpackConfig = config.webpack
 
   const webpackConfig = {
+    name: isServer ? 'server' : 'client',
+    target: isServer ? 'node' : 'web',
     mode: isDev ? 'development' : 'production',
-    devtool: isDev ? 'cheap-module-source-map' : 'source-map',
+    stats: 'errors-only',
+    // devtool: isDev ? 'cheap-module-source-map' : 'source-map',
     // Fail out on the first error instead of tolerating it.
     bail: isProd,
     // Disable performance check since we have custom checks.
     performance: false,
     entry: {
-      app: paths.appIndexJs,
+      ...(!isServer && { 'entry-client': paths.appClient }),
+      ...(isServer && { 'entry-server': paths.appServer }),
     },
     output: {
-      path: isProd ? paths.appBuild : undefined,
+      // path: isProd ? paths.appBuild : undefined,
+      path: paths.appBuild,
       pathinfo: isDev,
-      filename: isDev
-        ? 'scripts/[name].js'
-        : 'scripts/[name].[contenthash:8].js',
-      chunkFilename: isDev
-        ? 'scripts/[name].chunk.js'
-        : 'scripts/[name].[contenthash:8].chunk.js',
+      library: isServer ? undefined : '_N_E',
+      libraryTarget: isServer ? 'commonjs2' : 'assign',
+      filename: isServer
+        ? '[name].js'
+        : `static/chunks/[name]${isDev ? '' : '-[contenthash]'}.js`,
+      chunkFilename: isServer
+        ? `${isDev ? '[name]' : '[name].[contenthash]'}.js`
+        : `static/chunks/${isDev ? '[name]' : '[name].[contenthash]'}.js`,
       publicPath: paths.publicPath,
-      // Remove once we use webpack 5 since it will be the default.
-      futureEmitAssets: true,
     },
     resolve: {
       alias: {
@@ -58,13 +57,14 @@ module.exports = function createWebpackConfig({
     },
     optimization: {
       // Automatically split vendor and commons.
-      splitChunks: {
-        chunks: 'all',
-      },
-      // Keep the runtime chunk separated to enable long term caching.
-      runtimeChunk: {
-        name: (entrypoint) => `webpack-runtime-${entrypoint.name}`,
-      },
+      splitChunks: isServer
+        ? false
+        : {
+            chunks: 'all',
+          },
+      minimize: !(isDev || isServer),
+      emitOnErrors: isProd,
+      runtimeChunk: !isServer ? { name: 'webpack-runtime' } : undefined,
     },
     module: {
       // Make missing exports an error instead of a warning.
@@ -75,14 +75,16 @@ module.exports = function createWebpackConfig({
         // Process application JS with Babel.
         {
           test: /\.(js|mjs)$/,
-          include: paths.appSrc,
+          // include: paths.appSrc,
+          exclude: paths.appNodeModules,
           loader: require.resolve('./babel-loader.js'),
           options: {
-            plugins: [isDev && require.resolve('react-refresh/babel')].filter(
-              Boolean
-            ),
+            isServer,
+            plugins: [
+              isDev && !isServer && require.resolve('react-refresh/babel'),
+            ].filter(Boolean),
             cacheCompression: false,
-            cacheDirectory: true,
+            // cacheDirectory: true,
           },
         },
         {
@@ -96,49 +98,21 @@ module.exports = function createWebpackConfig({
       ],
     },
     plugins: [
-      // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin({
-        template: paths.appHtml,
-        inject: true,
-        minify: !isDev
-          ? {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeRedundantAttributes: true,
-              useShortDoctype: true,
-              removeEmptyAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              keepClosingSlash: true,
-              minifyJS: true,
-              minifyCSS: true,
-              minifyURLs: true,
-            }
-          : undefined,
-      }),
-      new InterpolateHtmlPlugin(HtmlWebpackPlugin, { PUBLIC_URL: '' }),
-      // Inlines the webpack runtime script. This script is too small to warrant
-      // a network request.
-      isProd &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [
-          /webpack-runtime-.+[.]js/,
-        ]),
-      // This gives some necessary context to module not found errors, such as
-      // the requesting resource.
+      !isServer &&
+        new webpack.ProvidePlugin({
+          Buffer: [require.resolve('buffer'), 'Buffer'],
+          process: [require.resolve('process')],
+        }),
       new ModuleNotFoundPlugin(paths.appPath),
       // This is necessary to emit hot updates (Fast Refresh).
-      isDev && new webpack.HotModuleReplacementPlugin(),
+      isDev && !isServer && new webpack.HotModuleReplacementPlugin(),
       // Hot reloading for React.
       // https://github.com/facebook/react/tree/master/packages/react-refresh
       isDev &&
+        !isServer &&
         new ReactRefreshWebpackPlugin({
           overlay: {
-            entry: webpackDevClientEntry,
-            // The expected exports are slightly different from what the overlay exports,
-            // so an interop is included here to enable feedback on module-level errors.
-            module: require.resolve('react-dev-utils/refreshOverlayInterop'),
-            // Since we ship a custom dev client and overlay integration,
-            // the bundled socket handling logic can be eliminated.
-            sockIntegration: false,
+            sockIntegration: 'whm',
           },
         }),
       // Watcher doesn't work well if you mistype casing in a path so we use
@@ -150,29 +124,34 @@ module.exports = function createWebpackConfig({
       //   `index.html`
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
-      new WebpackManifestPlugin({
-        fileName: 'asset-manifest.json',
-        generate: (seed, files, entrypoints) => {
-          const manifestFiles = files.reduce((acc, file) => {
-            acc[file.name] = file.path
-            return acc
-          }, seed)
-          const entrypointFiles = entrypoints.app.filter(
-            (fileName) => !fileName.endsWith('.map')
-          )
+      !isServer &&
+        new WebpackManifestPlugin({
+          fileName: 'build-manifest.json',
+          entrypoints: true,
+          contextRelativeKeys: true,
+          // generate: (seed, files, entrypoints) => {
+          //   const manifestFiles = files.reduce((acc, file) => {
+          //     acc[file.name] = file.path
+          //     return acc
+          //   }, seed)
+          //   const entrypointFiles = entrypoints.app.filter(
+          //     (fileName) => !fileName.endsWith('.map')
+          //   )
 
-          return {
-            files: manifestFiles,
-            entrypoints: entrypointFiles,
-          }
-        },
-      }),
+          //   return {
+          //     files: manifestFiles,
+          //     entrypoints: entrypointFiles,
+          //   }
+          // },
+        }),
       // If you require a missing module and then `npm install` it, you still have
       // to restart the development server for webpack to discover it. This plugin
       // makes the discovery automatic so you don't have to restart.
-      isDev && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+      isDev &&
+        !isServer &&
+        new WatchMissingNodeModulesPlugin(paths.appNodeModules),
       // Visual and interactive bundle analyzer in the browser.
-      analyzeBundle && new BundleAnalyzerPlugin(),
+      !isServer && analyzeBundle && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
   }
 

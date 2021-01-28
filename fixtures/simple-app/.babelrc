@@ -1,0 +1,4 @@
+{
+  "extends": "react-toolkit/babel",
+  "plugins": [["styled-components", { "ssr": true }]]
+}

@@ -9,14 +9,16 @@ module.exports = require('babel-loader').custom((babel) => {
     customOptions(options) {
       const custom = {
         isDev: options.isDev,
+        isServer: options.isServer,
       }
 
       const loader = { ...options }
       delete loader.isDev
+      delete loader.isServer
 
       return { custom, loader }
     },
-    config(cfg) {
+    config(cfg, { customOptions: { isDev, isServer } }) {
       const options = { ...cfg.options }
 
       if (cfg.hasFilesystemConfig()) {
@@ -30,6 +32,9 @@ module.exports = require('babel-loader').custom((babel) => {
       } else {
         options.presets = [...options.presets, presetItem]
       }
+
+      options.caller.isServer = isServer
+      options.caller.isDev = isDev
 
       return options
     },

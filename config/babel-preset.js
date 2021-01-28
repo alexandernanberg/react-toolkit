@@ -6,26 +6,24 @@ const modules = process.env.BABEL_MODULES || false
 const useESModules = !modules && (isDevelopment || isProduction)
 
 module.exports = (api, options = {}) => {
-  api.cache.using(() => process.env.NODE_ENV)
+  // api.cache.using(() => process.env.NODE_ENV)
+  const isServer = api.caller((caller) => !!caller && caller.isServer)
 
   return {
+    sourceType: 'unambiguous',
     presets: [
-      isTest && [
+      [
         require.resolve('@babel/preset-env'),
         {
-          targets: {
-            node: 'current',
-          },
-        },
-      ],
-      (isDevelopment || isProduction) && [
-        require.resolve('@babel/preset-env'),
-        {
-          modules,
+          modules: 'auto',
           bugfixes: true,
-          useBuiltIns: 'usage',
-          corejs: 3,
-          // Exclude transforms that make all code slower
+          ...(isServer || isTest
+            ? { targets: { node: 'current' } }
+            : {
+                useBuiltIns: 'entry',
+                corejs: 3,
+                targets: 'last 2 Chrome versions',
+              }),
           exclude: ['transform-typeof-symbol'],
           ...options['preset-env'],
         },
@@ -51,7 +49,7 @@ module.exports = (api, options = {}) => {
       ],
       require.resolve('@babel/plugin-proposal-optional-chaining'),
       require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
-      [
+      !isServer && [
         require.resolve('@babel/plugin-transform-runtime'),
         {
           useESModules,
