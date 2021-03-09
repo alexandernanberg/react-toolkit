@@ -1,7 +1,14 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import {
+  Fragment,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react'
 import { Scripts, Meta } from 'react-toolkit/react'
 import { Routes, Route } from 'react-router-dom'
 import styled from 'styled-components'
+import StylesContext from './styles-context'
 
 const Box = styled.div`
   background-color: red;
@@ -23,6 +30,8 @@ function NoSsr({ children }) {
 }
 
 export default function App() {
+  const styles = useContext(StylesContext)
+
   return (
     <html lang="en">
       <head>
@@ -33,6 +42,7 @@ export default function App() {
         />
         <Meta />
         <title>Simple app</title>
+        {styles}
       </head>
       <body>
         Hello world
@@ -43,7 +53,7 @@ export default function App() {
           <Route path="/bar" element={<>Bar</>} />
         </Routes>
         <NoSsr>
-          <div>Only on the lol</div>
+          <div>Only on the client lol</div>
         </NoSsr>
         <Scripts />
       </body>
