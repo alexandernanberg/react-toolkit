@@ -1,14 +1,8 @@
-import {
-  Fragment,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react'
-import { Scripts, Meta } from 'react-toolkit/react'
-import { Routes, Route } from 'react-router-dom'
+import { useContext, useEffect, useLayoutEffect, useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { Meta, Scripts } from 'react-toolkit/react'
 import styled from 'styled-components'
-import StylesContext from './styles-context'
+import StylesheetContext from './stylesheet-context'
 
 const Box = styled.div`
   background-color: red;
@@ -30,7 +24,7 @@ function NoSsr({ children }) {
 }
 
 export default function App() {
-  const styles = useContext(StylesContext)
+  const styles = useContext(StylesheetContext)
 
   return (
     <html lang="en">

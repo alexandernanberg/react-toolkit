@@ -3,7 +3,7 @@ import { Response } from 'react-toolkit/loader'
 import { ContextProvider } from 'react-toolkit/react'
 import { ServerStyleSheet } from 'styled-components'
 import App from './App'
-import StylesContext from './styles-context'
+import StylesheetContext from './stylesheet-context'
 
 export default function handleRequest(
   request,
@@ -16,22 +16,22 @@ export default function handleRequest(
   // First render pass to collect all styles.
   renderToString(
     sheet.collectStyles(
-      <StylesContext.Provider value={null}>
+      <StylesheetContext.Provider value={null}>
         <ContextProvider url={request.url} context={context}>
           <App />
         </ContextProvider>
-      </StylesContext.Provider>
+      </StylesheetContext.Provider>
     )
   )
   const styles = sheet.getStyleElement()
   sheet.seal()
 
   const markup = renderToString(
-    <StylesContext.Provider value={styles}>
+    <StylesheetContext.Provider value={styles}>
       <ContextProvider url={request.url} context={context}>
         <App />
       </ContextProvider>
-    </StylesContext.Provider>
+    </StylesheetContext.Provider>
   )
 
   return new Response(`<!DOCTYPE html>${markup}`, {
