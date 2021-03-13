@@ -83,8 +83,9 @@ module.exports = function createWebpackConfig({
             plugins: [
               isDev && !isServer && require.resolve('react-refresh/babel'),
             ].filter(Boolean),
+            compact: true,
             cacheCompression: false,
-            // cacheDirectory: true,
+            cacheDirectory: true,
           },
         },
         {
