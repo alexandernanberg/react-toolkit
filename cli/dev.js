@@ -130,7 +130,7 @@ Options
       //   return
       // }
 
-      const response = requestHandler(request, 200, new Headers(), {
+      const response = await requestHandler(request, 200, new Headers(), {
         buildManifest,
       })
 

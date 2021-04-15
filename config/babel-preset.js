@@ -2,8 +2,6 @@ const env = process.env.NODE_ENV || 'production'
 const isDevelopment = env === 'development'
 const isProduction = env === 'production'
 const isTest = env === 'test'
-const modules = process.env.BABEL_MODULES || false
-const useESModules = !modules && (isDevelopment || isProduction)
 
 module.exports = (api, options = {}) => {
   // api.cache.using(() => process.env.NODE_ENV)
@@ -52,7 +50,6 @@ module.exports = (api, options = {}) => {
       !isServer && [
         require.resolve('@babel/plugin-transform-runtime'),
         {
-          useESModules,
           helpers: false,
           // https://github.com/babel/babel/issues/10261
           // eslint-disable-next-line import/no-extraneous-dependencies

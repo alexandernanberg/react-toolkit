@@ -5,7 +5,7 @@ import { ServerStyleSheet } from 'styled-components'
 import App from './App'
 import StylesheetContext from './stylesheet-context'
 
-export default function handleRequest(
+export default async function handleRequest(
   request,
   responseStatusCode,
   responseHeaders,
