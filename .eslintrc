@@ -4,8 +4,10 @@
     "node": true
   },
   "rules": {
+    "import/no-dynamic-require": 0,
     "react/react-in-jsx-scope": 0,
     "no-restricted-syntax": 0,
-    "global-require": 0
+    "global-require": 0,
+    "no-console": 0
   }
 }

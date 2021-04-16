@@ -1,5 +1,3 @@
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable no-console */
 process.env.NODE_ENV = 'development'
 process.env.BABEL_ENV = 'development'
 

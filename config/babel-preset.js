@@ -52,7 +52,6 @@ module.exports = (api, options = {}) => {
         {
           helpers: false,
           // https://github.com/babel/babel/issues/10261
-          // eslint-disable-next-line import/no-extraneous-dependencies
           version: require('@babel/runtime/package.json').version,
           regenerator: false,
           ...options['transform-runtime'],

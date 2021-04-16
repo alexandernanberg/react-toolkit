@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 process.env.NODE_ENV = 'production'
 process.env.BABEL_ENV = 'production'
 
@@ -7,16 +6,14 @@ const fs = require('fs-extra')
 const webpack = require('webpack')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const chalk = require('chalk')
-const FileSizeReporter = require('react-dev-utils/FileSizeReporter')
+const {
+  measureFileSizesBeforeBuild,
+  printFileSizesAfterBuild,
+} = require('react-dev-utils/FileSizeReporter')
 const formatWebpackMessages = require('../lib/webpack-format-messages')
 const createWebpackConfig = require('../config/webpack-config')
 const paths = require('../config/paths')
 const { loadConfig } = require('../config/config')
-
-const {
-  measureFileSizesBeforeBuild,
-  printFileSizesAfterBuild,
-} = FileSizeReporter
 
 const isInteractive = process.stdout.isTTY
 

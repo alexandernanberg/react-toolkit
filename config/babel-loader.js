@@ -25,7 +25,6 @@ module.exports = require('babel-loader').custom((babel) => {
         for (const file of [cfg.babelrc, cfg.config]) {
           if (file && !configs.has(file)) {
             configs.add(file)
-            // eslint-disable-next-line no-console
             console.log(`Using external babel configuration: "${file}"`)
           }
         }
