@@ -3,6 +3,9 @@
   "env": {
     "node": true
   },
+  "globals": {
+    "__webpack_public_path__": true
+  },
   "rules": {
     "import/no-dynamic-require": 0,
     "react/react-in-jsx-scope": 0,

@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { StaticRouter } from 'react-router-dom/server'
 
-// eslint-disable-next-line
+// eslint-disable-next-line camelcase
 __webpack_public_path__ = `/_build/`
 
 const isServer = !(typeof window !== 'undefined')
