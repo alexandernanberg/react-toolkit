@@ -75,7 +75,7 @@ module.exports = function createWebpackConfig({
         // Process application JS with Babel.
         {
           test: /\.(js|mjs)$/,
-          // include: paths.appSrc,
+          include: paths.appSrc,
           exclude: paths.appNodeModules,
           loader: require.resolve('./babel-loader.js'),
           options: {

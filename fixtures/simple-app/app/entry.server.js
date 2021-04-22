@@ -2,7 +2,7 @@ import { renderToString } from 'react-dom/server'
 import { Response } from 'react-toolkit/loader'
 import { ContextProvider } from 'react-toolkit/react'
 import { ServerStyleSheet } from 'styled-components'
-import App from './App'
+import App from './root'
 import StylesheetContext from './stylesheet-context'
 
 export default async function handleRequest(
