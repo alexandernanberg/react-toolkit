@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 process.env.NODE_ENV = 'development'
 process.env.BABEL_ENV = 'development'
 
@@ -8,17 +9,14 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 const express = require('express')
 const compression = require('compression')
 const path = require('path')
-const { patchRequire } = require('fs-monkey')
+const Module = require('module')
+const { Headers } = require('whatwg-fetch')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
-const clearConsole = require('react-dev-utils/clearConsole')
 const paths = require('../config/paths')
 const createWebpackConfig = require('../config/webpack-config')
 const { loadConfig } = require('../config/config')
 const { createCompiler } = require('../lib/webpack-dev-utils')
-const { createRequestHandler } = require('../express')
-
-const isInteractive = process.stdout.isTTY
 
 const HOST = '0.0.0.0'
 const PORT = 3000
@@ -86,31 +84,35 @@ Options
 
   const app = express()
 
+  app.use(compression())
+
   app.use(
     webpackDevMiddleware(compiler, {
       serverSideRender: true,
       publicPath: '/_build/',
     })
   )
+
   app.use(webpackHotMiddleware(compiler.compilers[1], { log: false }))
 
   app.use(async (req, res) => {
     const { devMiddleware } = res.locals.webpack
-    const { outputFileSystem, stats } = devMiddleware
-    const jsonWebpackStats = stats.toJson()
-    const { assetsByChunkName, outputPath } = jsonWebpackStats
+    const { outputFileSystem } = devMiddleware
 
-    patchRequire(outputFileSystem)
+    const requireFromMemory = patchRequire(outputFileSystem)
 
-    const entryServerPath = path.join(paths.appBuild, 'entry-server.js')
-    const buildManifestPath = path.join(paths.appBuild, 'build-manifest.json')
+    const entryServerPath = path.join(paths.appBuild, 'entry.server.js')
 
     // Clear require cache to get the fresh file
     delete require.cache[require.resolve(entryServerPath)]
-    const requestHandler = require(entryServerPath).default
+    const requestHandler = requireFromMemory(entryServerPath).default
 
-    delete require.cache[require.resolve(buildManifestPath)]
-    const buildManifest = require(buildManifestPath)
+    const buildManifest = JSON.parse(
+      outputFileSystem.readFileSync(
+        path.join(paths.appBuild, 'build-manifest.json'),
+        'utf-8'
+      )
+    )
 
     try {
       const request = expressReqToRequest(req)
@@ -143,9 +145,21 @@ Options
     }
   })
 
-  // app.get('*', createRequestHandler())
-
   app.listen(port, () => {
-    console.log('Ready on http://localhost:3000')
+    console.log('Starting dev server...')
   })
+}
+
+function patchRequire(filesystem) {
+  return function patchedRequire(filename) {
+    const content = filesystem.readFileSync(filename, 'utf-8')
+
+    /* eslint-disable no-underscore-dangle */
+    const mod = new Module(filename, module.parent)
+    mod._compile(content, filename)
+    mod.paths = Module._nodeModulePaths(path.dirname(filename))
+    /* eslint-enable no-underscore-dangle */
+
+    return mod.exports
+  }
 }

@@ -29,8 +29,8 @@ module.exports = function createWebpackConfig({
     // Disable performance check since we have custom checks.
     performance: false,
     entry: {
-      ...(!isServer && { 'entry-client': paths.appClient }),
-      ...(isServer && { 'entry-server': paths.appServer }),
+      ...(!isServer && { 'entry.client': paths.appClient }),
+      ...(isServer && { 'entry.server': paths.appServer }),
     },
     output: {
       // path: isProd ? paths.appBuild : undefined,

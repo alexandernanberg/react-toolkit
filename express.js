@@ -9,7 +9,7 @@ function expressReqToRequest(req) {
 
 function createRequestHandler() {
   // eslint-disable-next-line import/no-dynamic-require
-  const requestHandler = require(path.join(paths.appBuild, 'entry-server.js'))
+  const requestHandler = require(path.join(paths.appBuild, 'entry.server.js'))
     .default
   // eslint-disable-next-line import/no-dynamic-require
   const buildManifest = require(path.join(

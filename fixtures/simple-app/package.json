@@ -11,7 +11,7 @@
     "react": "link:../../node_modules/react",
     "react-dom": "link:../../node_modules/react-dom",
     "react-router-dom": "link:../../node_modules/react-router-dom",
-    "react-toolkit": "file:../../",
+    "react-toolkit": "file:../..",
     "styled-components": "^5.2.1"
   },
   "eslintConfig": {
