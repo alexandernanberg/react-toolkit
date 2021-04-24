@@ -113,25 +113,12 @@ Options
       )
 
       const request = expressReqToRequest(req)
-
-      // // TODO: Clean this up
-      // if (request.url.startsWith('/_build/')) {
-      //   res
-      //     .status(200)
-      //     .type('js')
-      //     .send(
-      //       outputFileSystem.readFileSync(
-      //         path.join(paths.appBuild, req.url.replace('/_build', ''))
-      //       )
-      //     )
-      //   return
-      // }
-
       const response = await requestHandler(request, 200, new Headers(), {
         buildManifest,
       })
 
       const markup = await response.text()
+
       res
         .status(response.status)
         .set(Object.fromEntries(response.headers))
@@ -149,10 +136,8 @@ Options
 
 function patchRequire(filesystem) {
   return function patchedRequire(filename) {
-    console.log('before')
     const content = filesystem.readFileSync(filename, 'utf-8')
 
-    console.log(filename)
     /* eslint-disable no-underscore-dangle */
     const mod = new Module(filename, module.parent)
     mod._compile(content, filename)
