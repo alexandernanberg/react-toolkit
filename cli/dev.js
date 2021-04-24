@@ -90,6 +90,7 @@ Options
     webpackDevMiddleware(compiler, {
       serverSideRender: true,
       publicPath: '/_build/',
+      stats: 'none',
     })
   )
 
@@ -129,9 +130,7 @@ Options
     }
   })
 
-  app.listen(port, () => {
-    console.log('Starting dev server...')
-  })
+  app.listen(port)
 }
 
 function patchRequire(filesystem) {

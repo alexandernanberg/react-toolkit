@@ -43,15 +43,14 @@ export default function App() {
         {styles}
       </head>
       <body>
-        Hello world
         <Box />
         <Routes>
-          <Route path="/" element={<>Index</>} />
-          <Route path="/foo" element={<>Foo</>} />
-          <Route path="/bar" element={<>Bar</>} />
+          <Route path="/" element={<h1>Index</h1>} />
+          <Route path="/foo" element={<h1>Foo</h1>} />
+          <Route path="/bar" element={<h1>Bar</h1>} />
         </Routes>
         <NoSsr>
-          <div>Only on the client lol</div>
+          <div>Only on the client</div>
         </NoSsr>
         <Scripts />
       </body>

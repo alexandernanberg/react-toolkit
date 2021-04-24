@@ -22,7 +22,7 @@ module.exports = function createWebpackConfig({
     name: isServer ? 'server' : 'client',
     target: isServer ? 'node' : 'web',
     mode: isDev ? 'development' : 'production',
-    stats: 'errors-only',
+    stats: 'errors-warnings',
     // devtool: isDev ? 'cheap-module-source-map' : 'source-map',
     // Fail out on the first error instead of tolerating it.
     bail: isProd,
