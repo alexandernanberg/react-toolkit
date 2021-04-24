@@ -96,25 +96,22 @@ Options
   app.use(webpackHotMiddleware(compiler.compilers[1], { log: false }))
 
   app.use(async (req, res) => {
-    const { devMiddleware } = res.locals.webpack
-    const { outputFileSystem } = devMiddleware
-
-    const requireFromMemory = patchRequire(outputFileSystem)
-
-    const entryServerPath = path.join(paths.appBuild, 'entry.server.js')
-
-    // Clear require cache to get the fresh file
-    delete require.cache[require.resolve(entryServerPath)]
-    const requestHandler = requireFromMemory(entryServerPath).default
-
-    const buildManifest = JSON.parse(
-      outputFileSystem.readFileSync(
-        path.join(paths.appBuild, 'build-manifest.json'),
-        'utf-8'
-      )
-    )
-
     try {
+      const { devMiddleware } = res.locals.webpack
+      const { outputFileSystem } = devMiddleware
+
+      const requireFromMemory = patchRequire(outputFileSystem)
+      const requestHandler = requireFromMemory(
+        path.join(paths.appBuild, 'entry.server.js')
+      ).default
+
+      const buildManifest = JSON.parse(
+        outputFileSystem.readFileSync(
+          path.join(paths.appBuild, 'build-manifest.json'),
+          'utf-8'
+        )
+      )
+
       const request = expressReqToRequest(req)
 
       // // TODO: Clean this up
@@ -152,8 +149,10 @@ Options
 
 function patchRequire(filesystem) {
   return function patchedRequire(filename) {
+    console.log('before')
     const content = filesystem.readFileSync(filename, 'utf-8')
 
+    console.log(filename)
     /* eslint-disable no-underscore-dangle */
     const mod = new Module(filename, module.parent)
     mod._compile(content, filename)
