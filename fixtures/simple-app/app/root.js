@@ -13,10 +13,12 @@ const Box = styled.div`
 const useIsomorphicEffect =
   typeof window === 'undefined' ? useEffect : useLayoutEffect
 
-function NoSsr({ children }) {
-  const [mounted, setMounted] = useState(false)
+let hydrating = true
+function ClientOnly({ children }) {
+  const [mounted, setMounted] = useState(!hydrating)
 
   useIsomorphicEffect(() => {
+    hydrating = false
     setMounted(true)
   }, [])
 
@@ -49,9 +51,9 @@ export default function App() {
           <Route path="/foo" element={<h1>Foo</h1>} />
           <Route path="/bar" element={<h1>Bar</h1>} />
         </Routes>
-        <NoSsr>
+        <ClientOnly>
           <div>Only on the client</div>
-        </NoSsr>
+        </ClientOnly>
         <Scripts />
       </body>
     </html>

@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = require('babel-loader').custom((babel) => {
   const presetItem = babel.createConfigItem(require('./babel-preset'), {
     type: 'preset',
@@ -25,7 +27,12 @@ module.exports = require('babel-loader').custom((babel) => {
         for (const file of [cfg.babelrc, cfg.config]) {
           if (file && !configs.has(file)) {
             configs.add(file)
-            console.log(`Using external babel configuration: "${file}"`)
+            console.log(
+              `Using external babel configuration: "${path.relative(
+                path.resolve(process.cwd(), '../'),
+                file
+              )}"`
+            )
           }
         }
       } else {

@@ -12,10 +12,7 @@ const {
 } = require('react-dev-utils/FileSizeReporter')
 const formatWebpackMessages = require('../lib/webpack-format-messages')
 const createWebpackConfig = require('../config/webpack-config')
-const paths = require('../config/paths')
 const { loadConfig } = require('../config/config')
-
-const isInteractive = process.stdout.isTTY
 
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024
@@ -55,19 +52,15 @@ Options
 
   const config = await loadConfig()
 
-  if (!checkRequiredFiles([paths.appServer, paths.appClient])) {
+  if (!checkRequiredFiles([config.entryServer, config.entryClient])) {
     process.exit(1)
   }
 
-  const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild)
+  const previousFileSizes = await measureFileSizesBeforeBuild(config.appBuild)
 
-  if (isInteractive) {
-    // clearConsole()
-  }
+  console.log('Creating an optimized production build...')
 
-  console.log('Creating an optimized production build...\n')
-
-  fs.emptyDirSync(paths.appBuild)
+  fs.emptyDirSync(config.appBuild)
 
   // copyPublicFolder()
 
@@ -131,7 +124,7 @@ Options
       printFileSizesAfterBuild(
         stats,
         previousFileSizes,
-        paths.appBuild,
+        config.appBuild,
         WARN_AFTER_BUNDLE_GZIP_SIZE,
         WARN_AFTER_CHUNK_GZIP_SIZE
       )

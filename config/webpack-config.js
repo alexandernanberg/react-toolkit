@@ -5,7 +5,6 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
-const paths = require('./paths')
 
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
@@ -29,12 +28,12 @@ module.exports = function createWebpackConfig({
     // Disable performance check since we have custom checks.
     performance: false,
     entry: {
-      ...(!isServer && { 'entry.client': paths.appClient }),
-      ...(isServer && { 'entry.server': paths.appServer }),
+      ...(!isServer && { 'entry.client': config.entryClient }),
+      ...(isServer && { 'entry.server': config.entryServer }),
     },
     output: {
-      // path: isProd ? paths.appBuild : undefined,
-      path: paths.appBuild,
+      // path: isProd ? config.appBuild : undefined,
+      path: config.appBuild,
       pathinfo: isDev,
       library: isServer ? undefined : '_N_E',
       libraryTarget: isServer ? 'commonjs2' : 'assign',
@@ -44,7 +43,7 @@ module.exports = function createWebpackConfig({
       chunkFilename: isServer
         ? `${isDev ? '[name]' : '[name].[contenthash]'}.js`
         : `static/chunks/${isDev ? '[name]' : '[name].[contenthash]'}.js`,
-      publicPath: paths.publicPath,
+      publicPath: config.publicPath,
     },
     resolve: {
       alias: {
@@ -75,8 +74,8 @@ module.exports = function createWebpackConfig({
         // Process application JS with Babel.
         {
           test: /\.(js|mjs)$/,
-          include: paths.appSrc,
-          exclude: paths.appNodeModules,
+          include: config.appDirectory,
+          exclude: config.appNodeModules,
           loader: require.resolve('./babel-loader.js'),
           options: {
             isServer,
@@ -104,7 +103,7 @@ module.exports = function createWebpackConfig({
           Buffer: [require.resolve('buffer'), 'Buffer'],
           process: [require.resolve('process')],
         }),
-      new ModuleNotFoundPlugin(paths.appPath),
+      new ModuleNotFoundPlugin(config.appPath),
       // This is necessary to emit hot updates (Fast Refresh).
       isDev && !isServer && new webpack.HotModuleReplacementPlugin(),
       // Hot reloading for React.
@@ -150,7 +149,7 @@ module.exports = function createWebpackConfig({
       // makes the discovery automatic so you don't have to restart.
       isDev &&
         !isServer &&
-        new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+        new WatchMissingNodeModulesPlugin(config.appNodeModules),
       // Visual and interactive bundle analyzer in the browser.
       !isServer && analyzeBundle && new BundleAnalyzerPlugin(),
     ].filter(Boolean),

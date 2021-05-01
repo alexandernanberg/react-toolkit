@@ -13,7 +13,6 @@ const Module = require('module')
 const { Headers } = require('whatwg-fetch')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
-const paths = require('../config/paths')
 const createWebpackConfig = require('../config/webpack-config')
 const { loadConfig } = require('../config/config')
 const { createCompiler } = require('../lib/webpack-dev-utils')
@@ -58,11 +57,11 @@ Options
 
   const config = await loadConfig()
 
-  if (!checkRequiredFiles([paths.appServer, paths.appClient])) {
+  if (!checkRequiredFiles([config.entryServer, config.entryClient])) {
     process.exit(1)
   }
 
-  const urls = prepareUrls('http', host, port, paths.publicPath.slice(0, -1))
+  const urls = prepareUrls('http', host, port, config.publicPath.slice(0, -1))
 
   const compilerConfig = [
     createWebpackConfig({
@@ -103,12 +102,12 @@ Options
 
       const requireFromMemory = patchRequire(outputFileSystem)
       const requestHandler = requireFromMemory(
-        path.join(paths.appBuild, 'entry.server.js')
+        path.join(config.appBuild, 'entry.server.js')
       ).default
 
       const buildManifest = JSON.parse(
         outputFileSystem.readFileSync(
-          path.join(paths.appBuild, 'build-manifest.json'),
+          path.join(config.appBuild, 'build-manifest.json'),
           'utf-8'
         )
       )
