@@ -82,6 +82,7 @@ Options
   const compiler = webpack(compilerConfig)
 
   compiler.run((error, stats) => {
+    const statsData = stats.toJson({ all: true, warnings: true, errors: true })
     let messages
     if (error) {
       if (!error.message) {
@@ -94,28 +95,34 @@ Options
         warnings: [],
       })
     } else {
-      messages = formatWebpackMessages(
-        stats.toJson({ all: false, warnings: true, errors: true })
-      )
+      messages = formatWebpackMessages(statsData)
     }
 
     const isSuccessful = !messages.errors.length && !messages.warnings.length
     if (isSuccessful) {
-      console.log(chalk.green('Compiled successfully!\n'))
+      const elapsedTime = Math.max(
+        ...statsData.children.map((child) => child.time)
+      )
+
+      console.log(
+        `${chalk.green('Compiled successfully')} ${chalk.dim(
+          `in ${elapsedTime}ms`
+        )}\n`
+      )
     }
 
     if (messages.errors.length) {
       if (messages.errors.length > 1) {
         messages.errors.length = 1
       }
-      console.log(chalk.red('Failed to compile.\n'))
+      console.log(chalk.red('Failed to compile\n'))
       console.log(messages.errors.join('\n\n'))
       process.exit(1)
       return
     }
 
     if (messages.warnings.length) {
-      console.log(chalk.yellow('Compiled with warnings.\n'))
+      console.log(chalk.yellow('Compiled with warnings\n'))
       console.log(messages.warnings.join('\n\n'))
     }
 
