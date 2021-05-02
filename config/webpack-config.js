@@ -15,8 +15,6 @@ module.exports = function createWebpackConfig({
   analyzeBundle = false,
   reactProductionProfiling = false,
 }) {
-  const getUserWebpackConfig = config.webpack
-
   const webpackConfig = {
     name: isServer ? 'server' : 'client',
     target: isServer ? 'node' : 'web',
@@ -32,7 +30,6 @@ module.exports = function createWebpackConfig({
       ...(isServer && { 'entry.server': config.entryServer }),
     },
     output: {
-      // path: isProd ? config.appBuild : undefined,
       path: config.appBuild,
       pathinfo: isDev,
       library: isServer ? undefined : '_N_E',
@@ -56,12 +53,8 @@ module.exports = function createWebpackConfig({
     },
     optimization: {
       // Automatically split vendor and commons.
-      splitChunks: isServer
-        ? false
-        : {
-            chunks: 'all',
-          },
-      minimize: !(isDev || isServer),
+      splitChunks: isServer ? false : { chunks: 'all' },
+      minimize: !isDev,
       emitOnErrors: isProd,
       runtimeChunk: !isServer ? { name: 'webpack-runtime' } : undefined,
     },
@@ -87,14 +80,6 @@ module.exports = function createWebpackConfig({
             cacheDirectory: true,
           },
         },
-        {
-          test: /\.svg$/,
-          use: [
-            {
-              loader: '@svgr/webpack',
-            },
-          ],
-        },
       ],
     },
     plugins: [
@@ -104,7 +89,7 @@ module.exports = function createWebpackConfig({
           process: [require.resolve('process')],
         }),
       new ModuleNotFoundPlugin(config.appPath),
-      // This is necessary to emit hot updates (Fast Refresh).
+      // Emit hot updates for Fast Refresh.
       isDev && !isServer && new webpack.HotModuleReplacementPlugin(),
       // Hot reloading for React.
       // https://github.com/facebook/react/tree/master/packages/react-refresh
@@ -155,8 +140,8 @@ module.exports = function createWebpackConfig({
     ].filter(Boolean),
   }
 
-  if (getUserWebpackConfig) {
-    return getUserWebpackConfig(webpackConfig)
+  if (config.webpack) {
+    return config.webpack(webpackConfig)
   }
 
   return webpackConfig

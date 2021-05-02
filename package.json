@@ -49,7 +49,6 @@
     "@babel/preset-react": "^7.12.13",
     "@babel/runtime": "^7.13.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-    "@svgr/webpack": "^5.5.0",
     "arg": "^5.0.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-macros": "^3.0.1",
