@@ -4,12 +4,12 @@ process.env.BABEL_ENV = 'production'
 const arg = require('arg')
 const fs = require('fs-extra')
 const webpack = require('webpack')
-const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const chalk = require('chalk')
 const {
   measureFileSizesBeforeBuild,
   printFileSizesAfterBuild,
 } = require('react-dev-utils/FileSizeReporter')
+const checkRequiredFiles = require('../lib/verify-required-files')
 const formatWebpackMessages = require('../lib/webpack-format-messages')
 const createWebpackConfig = require('../config/webpack-config')
 const { loadConfig } = require('../config/config')
