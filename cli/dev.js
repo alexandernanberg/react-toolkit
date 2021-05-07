@@ -10,12 +10,14 @@ const express = require('express')
 const compression = require('compression')
 const path = require('path')
 const Module = require('module')
-const { Headers } = require('whatwg-fetch')
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
 const checkRequiredFiles = require('../server/verify-required-files')
 const createWebpackConfig = require('../server/compiler/webpack-config')
 const { loadConfig } = require('../server/config')
 const { createCompiler } = require('../server/compiler/webpack-dev-utils')
+const { injectGlobals } = require('../server/globals')
+
+injectGlobals()
 
 const HOST = '0.0.0.0'
 const PORT = 3000

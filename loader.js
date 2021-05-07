@@ -1,3 +1,3 @@
-const { Request, Response } = require('whatwg-fetch')
+const { Request, Response } = require('./server/fetch')
 
 module.exports = { Response, Request }
