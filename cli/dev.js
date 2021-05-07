@@ -102,12 +102,12 @@ Options
 
       const requireFromMemory = patchRequire(outputFileSystem)
       const requestHandler = requireFromMemory(
-        path.join(config.appBuild, 'entry.server.js')
+        path.join(config.buildDirectory, 'entry.server.js')
       ).default
 
       const buildManifest = JSON.parse(
         outputFileSystem.readFileSync(
-          path.join(config.appBuild, 'build-manifest.json'),
+          path.join(config.buildDirectory, 'build-manifest.json'),
           'utf-8'
         )
       )

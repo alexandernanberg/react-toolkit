@@ -9,11 +9,13 @@ function expressReqToRequest(req) {
 
 function createRequestHandler() {
   // eslint-disable-next-line import/no-dynamic-require
-  const requestHandler = require(path.join(paths.appBuild, 'entry.server.js'))
-    .default
+  const requestHandler = require(path.join(
+    paths.buildDirectory,
+    'entry.server.js'
+  )).default
   // eslint-disable-next-line import/no-dynamic-require
   const buildManifest = require(path.join(
-    paths.appBuild,
+    paths.buildDirectory,
     'build-manifest.json'
   ))
 
@@ -26,7 +28,9 @@ function createRequestHandler() {
         res
           .status(200)
           .type('js')
-          .sendFile(path.join(paths.appBuild, req.url.replace('/_build', '')))
+          .sendFile(
+            path.join(paths.buildDirectory, req.url.replace('/_build', ''))
+          )
         return
       }
 

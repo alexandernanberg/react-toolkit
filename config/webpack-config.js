@@ -30,7 +30,7 @@ module.exports = function createWebpackConfig({
       ...(isServer && { 'entry.server': config.entryServer }),
     },
     output: {
-      path: config.appBuild,
+      path: config.buildDirectory,
       pathinfo: isDev,
       library: isServer ? undefined : '_N_E',
       libraryTarget: isServer ? 'commonjs2' : 'assign',
@@ -68,7 +68,7 @@ module.exports = function createWebpackConfig({
         {
           test: /\.(js|mjs)$/,
           include: config.appDirectory,
-          exclude: config.appNodeModules,
+          exclude: config.nodeModulesDirectory,
           loader: require.resolve('./babel-loader.js'),
           options: {
             isServer,
@@ -88,7 +88,7 @@ module.exports = function createWebpackConfig({
           Buffer: [require.resolve('buffer'), 'Buffer'],
           process: [require.resolve('process')],
         }),
-      new ModuleNotFoundPlugin(config.appPath),
+      new ModuleNotFoundPlugin(config.rootDirectory),
       // Emit hot updates for Fast Refresh.
       isDev && !isServer && new webpack.HotModuleReplacementPlugin(),
       // Hot reloading for React.
@@ -134,7 +134,7 @@ module.exports = function createWebpackConfig({
       // makes the discovery automatic so you don't have to restart.
       isDev &&
         !isServer &&
-        new WatchMissingNodeModulesPlugin(config.appNodeModules),
+        new WatchMissingNodeModulesPlugin(config.nodeModulesDirectory),
       // Visual and interactive bundle analyzer in the browser.
       !isServer && analyzeBundle && new BundleAnalyzerPlugin(),
     ].filter(Boolean),

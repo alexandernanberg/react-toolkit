@@ -56,11 +56,13 @@ Options
     process.exit(1)
   }
 
-  const previousFileSizes = await measureFileSizesBeforeBuild(config.appBuild)
+  const previousFileSizes = await measureFileSizesBeforeBuild(
+    config.buildDirectory
+  )
 
   console.log('Creating an optimized production build...')
 
-  fs.emptyDirSync(config.appBuild)
+  fs.emptyDirSync(config.buildDirectory)
 
   // copyPublicFolder()
 
@@ -131,7 +133,7 @@ Options
       printFileSizesAfterBuild(
         stats,
         previousFileSizes,
-        config.appBuild,
+        config.buildDirectory,
         WARN_AFTER_BUNDLE_GZIP_SIZE,
         WARN_AFTER_CHUNK_GZIP_SIZE
       )

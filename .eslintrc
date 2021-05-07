@@ -11,6 +11,7 @@
     "react/react-in-jsx-scope": 0,
     "no-restricted-syntax": 0,
     "global-require": 0,
-    "no-console": 0
+    "no-console": 0,
+    "no-use-before-define": 0
   }
 }
