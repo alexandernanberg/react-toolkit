@@ -1,4 +1,4 @@
-const preset = require('./config/babel-preset')
+const preset = require('./server/compiler/babel-preset')
 
 module.exports = {
   presets: [preset],

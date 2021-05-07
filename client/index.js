@@ -39,6 +39,10 @@ export function Meta() {
   )
 }
 
+export function Links() {
+  return null
+}
+
 export function Scripts() {
   const context = useContext(Context)
 

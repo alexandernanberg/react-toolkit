@@ -9,10 +9,10 @@ const {
   measureFileSizesBeforeBuild,
   printFileSizesAfterBuild,
 } = require('react-dev-utils/FileSizeReporter')
-const checkRequiredFiles = require('../lib/verify-required-files')
-const formatWebpackMessages = require('../lib/webpack-format-messages')
-const createWebpackConfig = require('../config/webpack-config')
-const { loadConfig } = require('../config/config')
+const checkRequiredFiles = require('../server/verify-required-files')
+const formatWebpackMessages = require('../server/compiler/webpack-format-messages')
+const createWebpackConfig = require('../server/compiler/webpack-config')
+const { loadConfig } = require('../server/config')
 
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024

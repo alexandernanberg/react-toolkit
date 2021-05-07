@@ -12,10 +12,10 @@ const path = require('path')
 const Module = require('module')
 const { Headers } = require('whatwg-fetch')
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
-const checkRequiredFiles = require('../lib/verify-required-files')
-const createWebpackConfig = require('../config/webpack-config')
-const { loadConfig } = require('../config/config')
-const { createCompiler } = require('../lib/webpack-dev-utils')
+const checkRequiredFiles = require('../server/verify-required-files')
+const createWebpackConfig = require('../server/compiler/webpack-config')
+const { loadConfig } = require('../server/config')
+const { createCompiler } = require('../server/compiler/webpack-dev-utils')
 
 const HOST = '0.0.0.0'
 const PORT = 3000
