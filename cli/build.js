@@ -49,13 +49,13 @@ Options
   const analyzeBundle = args['--analyze']
   const reactProductionProfiling = args['--profile']
 
+  console.log('Creating an optimized production build...')
+
   const config = await loadConfig()
 
   if (!(await checkRequiredFiles([config.entryServer, config.entryClient]))) {
     process.exit(1)
   }
-
-  console.log('Creating an optimized production build...')
 
   const previousFileSizes = await measureFileSizesBeforeBuild(
     config.buildDirectory
@@ -85,7 +85,7 @@ Options
         console.log()
       }
     },
-    onBuildWarnings(warningMessage) {
+    onWarning(warningMessage) {
       console.log(chalk.yellow('Compiled with warnings'))
       console.log(warningMessage)
     },

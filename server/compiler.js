@@ -1,5 +1,4 @@
 const webpack = require('webpack')
-const chalk = require('chalk')
 const createStore = require('unistore')
 const createWebpackConfig = require('./compiler/webpack-config')
 const formatWebpackMessages = require('./compiler/webpack-format-messages')
@@ -12,7 +11,7 @@ const Compiled = 4
 
 exports.watch = async function watch(
   config,
-  { onBuildStart, onBuildFinish, onBuildWarnings, onError }
+  { onBuildStart, onBuildFinish, onWarning, onError }
 ) {
   const store = createStore()
 
@@ -30,7 +29,7 @@ exports.watch = async function watch(
         onError(state.errors.join('\n\n'))
         break
       case CompiledWithWarnings:
-        onBuildWarnings(state.warnings.join('\n\n'))
+        onWarning(state.warnings.join('\n\n'))
         break
       case Compiled:
         onBuildFinish()
@@ -105,7 +104,7 @@ exports.watch = async function watch(
 
 exports.run = async function run(
   config,
-  { analyzeBundleSizes, profileReact, onError, onBuildFinish, onBuildWarnings }
+  { analyzeBundleSizes, profileReact, onError, onBuildFinish, onWarning }
 ) {
   const compilerConfig = [
     createWebpackConfig({
@@ -153,7 +152,7 @@ exports.run = async function run(
       }
 
       if (messages.warnings.length) {
-        onBuildWarnings(messages.warnings.join('\n\n'))
+        onWarning(messages.warnings.join('\n\n'))
         process.exit(1)
       }
 

@@ -81,7 +81,7 @@ Options
       )
       console.log(`Ready on ${urls.localUrlForTerminal}`)
     },
-    onBuildWarnings(warningMessage) {
+    onWarning(warningMessage) {
       console.log(chalk.yellow('Compiled with warnings'))
       console.log(warningMessage)
     },
