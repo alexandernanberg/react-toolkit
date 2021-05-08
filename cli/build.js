@@ -65,7 +65,7 @@ Options
 
   const start = Date.now()
 
-  await compiler.build(config, {
+  await compiler.run(config, {
     onBuildFinish(stats) {
       console.log(
         `${chalk.green('Compiled successfully')} ${chalk.dim(

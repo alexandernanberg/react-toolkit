@@ -103,7 +103,7 @@ exports.watch = async function watch(
   return compiler
 }
 
-exports.build = async function build(
+exports.run = async function run(
   config,
   { analyzeBundleSizes, profileReact, onError, onBuildFinish, onBuildWarnings }
 ) {
@@ -124,35 +124,40 @@ exports.build = async function build(
   const compiler = webpack(compilerConfig)
 
   compiler.run((error, stats) => {
-    const statsData = stats.toJson('errors-warnings')
-    let messages
-    if (error) {
-      if (!error.message) {
-        console.log(error)
+    compiler.close(() => {
+      if (error) {
+        const reason = error?.toString()
+        if (!reason) {
+          onError(error)
+          return
+        }
+
+        onError(
+          formatWebpackMessages({
+            errors: [reason],
+            warnings: [],
+          }).errors.join('\n\n')
+        )
         return
       }
 
-      messages = formatWebpackMessages({
-        errors: [error.message],
-        warnings: [],
-      })
-    } else {
-      messages = formatWebpackMessages(statsData)
-    }
+      const statsData = stats.toJson('errors-warnings')
+      const messages = formatWebpackMessages(statsData)
 
-    if (messages.errors.length) {
-      if (messages.errors.length > 1) {
-        messages.errors.length = 1
+      if (messages.errors.length) {
+        if (messages.errors.length > 1) {
+          messages.errors.length = 1
+        }
+        onError(messages.errors.join('\n\n'))
+        process.exit(1)
       }
-      onError(messages.errors.join('\n\n'))
-      process.exit(1)
-    }
 
-    if (messages.warnings.length) {
-      onBuildWarnings(messages.warnings.join('\n\n'))
-      process.exit(1)
-    }
+      if (messages.warnings.length) {
+        onBuildWarnings(messages.warnings.join('\n\n'))
+        process.exit(1)
+      }
 
-    onBuildFinish(stats)
+      onBuildFinish(stats)
+    })
   })
 }
