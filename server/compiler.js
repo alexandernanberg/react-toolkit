@@ -58,7 +58,8 @@ exports.watch = async function watch(
   try {
     compiler = webpack(compilerConfig)
   } catch (err) {
-    onError(err.message || err)
+    const reason = err?.toString()
+    onError(reason || err)
     process.exit(1)
   }
 
@@ -70,17 +71,7 @@ exports.watch = async function watch(
     const statsData = stats.toJson('errors-warnings')
     const messages = formatWebpackMessages(statsData)
 
-    const isSuccessful = !messages.errors.length && !messages.warnings.length
-
-    if (isSuccessful) {
-      store.setState({
-        status: Compiled,
-        errors: null,
-        warnings: null,
-      })
-    }
-
-    if (messages.errors.length) {
+    if (stats.hasErrors()) {
       if (messages.errors.length > 1) {
         messages.errors.length = 1
       }
@@ -91,12 +82,19 @@ exports.watch = async function watch(
       return
     }
 
-    if (messages.warnings.length) {
+    if (stats.hasWarnings()) {
       store.setState({
         status: CompiledWithWarnings,
         warnings: messages.warnings,
       })
+      return
     }
+
+    store.setState({
+      status: Compiled,
+      errors: null,
+      warnings: null,
+    })
   })
 
   return compiler
@@ -126,34 +124,24 @@ exports.run = async function run(
     compiler.close(() => {
       if (error) {
         const reason = error?.toString()
-        if (!reason) {
-          onError(error)
-          return
-        }
-
-        onError(
-          formatWebpackMessages({
-            errors: [reason],
-            warnings: [],
-          }).errors.join('\n\n')
-        )
-        return
+        onError(reason || error)
+        process.exit(1)
       }
 
       const statsData = stats.toJson('errors-warnings')
       const messages = formatWebpackMessages(statsData)
 
-      if (messages.errors.length) {
+      if (stats.hasErrors()) {
         if (messages.errors.length > 1) {
           messages.errors.length = 1
         }
         onError(messages.errors.join('\n\n'))
-        process.exit(1)
+        return
       }
 
-      if (messages.warnings.length) {
+      if (stats.hasWarnings()) {
         onWarning(messages.warnings.join('\n\n'))
-        process.exit(1)
+        return
       }
 
       onBuildFinish(stats)
