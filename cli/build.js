@@ -3,16 +3,15 @@ process.env.BABEL_ENV = 'production'
 
 const arg = require('arg')
 const fs = require('fs-extra')
-const webpack = require('webpack')
 const chalk = require('chalk')
 const {
   measureFileSizesBeforeBuild,
   printFileSizesAfterBuild,
 } = require('react-dev-utils/FileSizeReporter')
+const prettyMs = require('pretty-ms')
 const checkRequiredFiles = require('../server/verify-required-files')
-const formatWebpackMessages = require('../server/compiler/webpack-format-messages')
-const createWebpackConfig = require('../server/compiler/webpack-config')
 const { loadConfig } = require('../server/config')
+const compiler = require('../server/compiler')
 
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024
@@ -52,92 +51,47 @@ Options
 
   const config = await loadConfig()
 
-  if (!checkRequiredFiles([config.entryServer, config.entryClient])) {
+  if (!(await checkRequiredFiles([config.entryServer, config.entryClient]))) {
     process.exit(1)
   }
+
+  console.log('Creating an optimized production build...')
 
   const previousFileSizes = await measureFileSizesBeforeBuild(
     config.buildDirectory
   )
 
-  console.log('Creating an optimized production build...')
-
   fs.emptyDirSync(config.buildDirectory)
 
-  // copyPublicFolder()
+  const start = Date.now()
 
-  const compilerConfig = [
-    createWebpackConfig({
-      isServer: true,
-      config,
-      analyzeBundle,
-      reactProductionProfiling,
-    }),
-    createWebpackConfig({
-      isServer: false,
-      config,
-      analyzeBundle,
-      reactProductionProfiling,
-    }),
-  ]
-
-  const compiler = webpack(compilerConfig)
-
-  compiler.run((error, stats) => {
-    const statsData = stats.toJson({ all: true, warnings: true, errors: true })
-    let messages
-    if (error) {
-      if (!error.message) {
-        console.log(error)
-        return
-      }
-
-      messages = formatWebpackMessages({
-        errors: [error.message],
-        warnings: [],
-      })
-    } else {
-      messages = formatWebpackMessages(statsData)
-    }
-
-    const isSuccessful = !messages.errors.length && !messages.warnings.length
-    if (isSuccessful) {
-      const elapsedTime = Math.max(
-        ...statsData.children.map((child) => child.time)
-      )
-
+  await compiler.build(config, {
+    onBuildFinish(stats) {
       console.log(
         `${chalk.green('Compiled successfully')} ${chalk.dim(
-          `in ${elapsedTime}ms`
+          `in ${prettyMs(Date.now() - start)}`
         )}\n`
       )
-    }
 
-    if (messages.errors.length) {
-      if (messages.errors.length > 1) {
-        messages.errors.length = 1
+      if (!analyzeBundle) {
+        console.log('File sizes after gzip:\n')
+        printFileSizesAfterBuild(
+          stats,
+          previousFileSizes,
+          config.buildDirectory,
+          WARN_AFTER_BUNDLE_GZIP_SIZE,
+          WARN_AFTER_CHUNK_GZIP_SIZE
+        )
+        console.log()
       }
-      console.log(chalk.red('Failed to compile\n'))
-      console.log(messages.errors.join('\n\n'))
-      process.exit(1)
-      return
-    }
-
-    if (messages.warnings.length) {
-      console.log(chalk.yellow('Compiled with warnings\n'))
-      console.log(messages.warnings.join('\n\n'))
-    }
-
-    if (!analyzeBundle) {
-      console.log('File sizes after gzip:\n')
-      printFileSizesAfterBuild(
-        stats,
-        previousFileSizes,
-        config.buildDirectory,
-        WARN_AFTER_BUNDLE_GZIP_SIZE,
-        WARN_AFTER_CHUNK_GZIP_SIZE
-      )
-      console.log()
-    }
+    },
+    onBuildWarnings(warningMessage) {
+      console.log(chalk.yellow('Compiled with warnings'))
+      console.log(warningMessage)
+    },
+    onError(errorMessage) {
+      console.log(chalk.red('Failed to compile'))
+      console.log(errorMessage)
+    },
   })
 }

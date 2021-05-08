@@ -1,21 +1,20 @@
-/* eslint-disable no-use-before-define */
 process.env.NODE_ENV = 'development'
 process.env.BABEL_ENV = 'development'
 
 const arg = require('arg')
-const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const express = require('express')
 const compression = require('compression')
 const path = require('path')
 const Module = require('module')
+const chalk = require('chalk')
+const prettyMs = require('pretty-ms')
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
 const checkRequiredFiles = require('../server/verify-required-files')
-const createWebpackConfig = require('../server/compiler/webpack-config')
 const { loadConfig } = require('../server/config')
-const { createCompiler } = require('../server/compiler/webpack-dev-utils')
 const { injectGlobals } = require('../server/globals')
+const compiler = require('../server/compiler')
 
 injectGlobals()
 
@@ -59,24 +58,38 @@ Options
 
   const config = await loadConfig()
 
-  if (!checkRequiredFiles([config.entryServer, config.entryClient])) {
+  if (!(await checkRequiredFiles([config.entryServer, config.entryClient]))) {
     process.exit(1)
   }
 
+  console.log('Starting development server...')
+
   const urls = prepareUrls('http', host, port, config.publicPath.slice(0, -1))
 
-  const compilerConfig = [
-    createWebpackConfig({
-      isServer: true,
-      config,
-    }),
-    createWebpackConfig({
-      isServer: false,
-      config,
-    }),
-  ]
+  let start = Date.now()
 
-  const compiler = createCompiler({ config: compilerConfig, webpack, urls })
+  const devCompiler = await compiler.watch(config, {
+    onBuildStart() {
+      start = Date.now()
+      console.log('Compiling...')
+    },
+    onBuildFinish() {
+      console.log(
+        `${chalk.green('Compiled successfully')} ${chalk.dim(
+          `in ${prettyMs(Date.now() - start)}`
+        )}`
+      )
+      console.log(`Ready on ${urls.localUrlForTerminal}`)
+    },
+    onBuildWarnings(warningMessage) {
+      console.log(chalk.yellow('Compiled with warnings'))
+      console.log(warningMessage)
+    },
+    onError(errorMessage) {
+      console.log(chalk.red('Failed to compile'))
+      console.log(errorMessage)
+    },
+  })
 
   function expressReqToRequest(req) {
     const headers = new Headers(Object.entries(req.headers))
@@ -88,14 +101,14 @@ Options
   app.use(compression())
 
   app.use(
-    webpackDevMiddleware(compiler, {
+    webpackDevMiddleware(devCompiler, {
       serverSideRender: true,
       publicPath: '/_build/',
       stats: 'none',
     })
   )
 
-  app.use(webpackHotMiddleware(compiler.compilers[1], { log: false }))
+  app.use(webpackHotMiddleware(devCompiler.compilers[1], { log: false }))
 
   app.use(async (req, res) => {
     try {

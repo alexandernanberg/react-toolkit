@@ -4,7 +4,7 @@ const isProduction = env === 'production'
 const isTest = env === 'test'
 
 module.exports = (api, options = {}) => {
-  // api.cache.using(() => process.env.NODE_ENV)
+  api.cache.invalidate(() => process.env.NODE_ENV)
   const isServer = api.caller((caller) => !!caller && caller.isServer)
 
   return {

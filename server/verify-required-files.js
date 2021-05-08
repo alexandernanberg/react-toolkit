@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
 
-function checkRequiredFiles(files) {
+async function checkRequiredFiles(files) {
   let currentFilePath
   try {
     files.forEach((filePath) => {
