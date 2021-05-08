@@ -58,7 +58,6 @@ module.exports = (api, options = {}) => {
         },
       ],
       require.resolve('@babel/plugin-syntax-dynamic-import'),
-      require.resolve('babel-plugin-macros'),
       isProduction && [
         require.resolve('babel-plugin-transform-react-remove-prop-types'),
         {
