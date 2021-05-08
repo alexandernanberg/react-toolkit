@@ -1,6 +1,6 @@
 import { useContext, useEffect, useLayoutEffect, useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import { Meta, Scripts } from 'react-toolkit/react'
+import { Route, Routes, NavLink } from 'react-router-dom'
+import { Meta, Scripts, Links } from 'react-toolkit/react'
 import styled from 'styled-components'
 import StylesheetContext from './stylesheet-context'
 
@@ -41,19 +41,32 @@ export default function App() {
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>"
         />
         <Meta />
+        <Links />
         <title>Simple app</title>
         {styles}
       </head>
       <body>
         <Box />
+        <nav>
+          <NavLink to="/" end>
+            Dashboard
+          </NavLink>
+          <NavLink to="/admin">Login</NavLink>
+        </nav>
         <Routes>
-          <Route path="/" element={<h1>Index</h1>} />
-          <Route path="/foo" element={<h1>Foo</h1>} />
-          <Route path="/bar" element={<h1>Bar</h1>} />
+          <Route
+            path="/"
+            element={
+              <>
+                <h1>Index</h1>
+                <ClientOnly>
+                  <div>Only on the client</div>
+                </ClientOnly>
+              </>
+            }
+          />
+          <Route path="/admin" element={<h1>Admin</h1>} />
         </Routes>
-        <ClientOnly>
-          <div>Only on the client</div>
-        </ClientOnly>
         <Scripts />
       </body>
     </html>
