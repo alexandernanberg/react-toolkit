@@ -17,7 +17,7 @@ function formatMessage(msg) {
     lines = [message.moduleName].concat(message.message.split('\n'))
   }
 
-  // Strip webpack-added headers off errors/warnings
+  // Strip Webpack-added headers off errors/warnings
   // https://github.com/webpack/webpack/blob/master/lib/ModuleError.js
   lines = lines.filter((line) => !/Module [A-z ]+\(from/.test(line))
 
