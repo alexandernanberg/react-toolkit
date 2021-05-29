@@ -16,13 +16,18 @@ if (!isServer) {
 
 const Context = createContext()
 
-export function ContextProvider({ url, context, children }) {
-  const value = useMemo(() => (!isServer ? c : context), [context])
-  const routerProps = useMemo(() => (isServer ? { location: url } : {}), [url])
+export const ContextProvider = Entry
+
+export function Entry({ url, context: entryContext, children }) {
+  const routerProps = useMemo(
+    () => (isServer ? { location: url } : undefined),
+    [url]
+  )
+  const context = useMemo(() => (!isServer ? c : entryContext), [entryContext])
 
   return (
     <Router {...routerProps}>
-      <Context.Provider value={value}>{children}</Context.Provider>
+      <Context.Provider value={context}>{children}</Context.Provider>
     </Router>
   )
 }
@@ -40,7 +45,13 @@ export function Meta() {
 }
 
 export function Links() {
-  return null
+  const context = useContext(Context)
+
+  return Object.entries(context.buildManifest)
+    .filter(([, src]) => src.endsWith('.css'))
+    .map(([key, src]) => (
+      <link key={key} href={`/_build${encodeURI(src)}`} rel="stylesheet" />
+    ))
 }
 
 export function Scripts() {
@@ -54,17 +65,11 @@ export function Scripts() {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(context) }}
       />
-      {Object.entries(context.buildManifest).map(([key, src]) => (
-        <script key={key} src={`/_build${encodeURI(src)}`} async />
-      ))}
+      {Object.entries(context.buildManifest)
+        .filter(([, src]) => src.endsWith('.js'))
+        .map(([key, src]) => (
+          <script key={key} src={`/_build${encodeURI(src)}`} async />
+        ))}
     </>
   )
-}
-
-export function Routes() {
-  return null
-}
-
-export function Link() {
-  return null
 }

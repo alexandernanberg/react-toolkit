@@ -3,6 +3,7 @@ import { Route, Routes, NavLink } from 'react-router-dom'
 import { Meta, Scripts, Links } from 'react-toolkit/react'
 import styled from 'styled-components'
 import StylesheetContext from './stylesheet-context'
+import './style.css'
 
 const Box = styled.div`
   background-color: red;

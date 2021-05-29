@@ -5,6 +5,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
@@ -38,7 +39,7 @@ module.exports = function createWebpackConfig({
         ? '[name].js'
         : `static/chunks/[name]${isDev ? '' : '-[contenthash]'}.js`,
       chunkFilename: isServer
-        ? `${isDev ? '[name]' : '[name].[contenthash]'}.js`
+        ? '[name].js'
         : `static/chunks/${isDev ? '[name]' : '[name].[contenthash]'}.js`,
       publicPath: config.publicPath,
     },
@@ -80,6 +81,14 @@ module.exports = function createWebpackConfig({
             cacheDirectory: true,
           },
         },
+        {
+          test: /\.(css)$/,
+          include: config.appDirectory,
+          use: [
+            !isServer && MiniCssExtractPlugin.loader,
+            require.resolve('css-loader'),
+          ].filter(Boolean),
+        },
       ],
     },
     plugins: [
@@ -103,6 +112,14 @@ module.exports = function createWebpackConfig({
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       isDev && new CaseSensitivePathsPlugin(),
+      // Extract CSS to a separate file only in client build.
+      !isServer &&
+        new MiniCssExtractPlugin({
+          experimentalUseImportModule: true,
+          filename: 'static/css/[contenthash].css',
+          chunkFilename: 'static/css/[contenthash].css',
+          ignoreOrder: true,
+        }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
       //   output file so that tools can pick it up without having to parse
