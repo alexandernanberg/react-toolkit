@@ -64,7 +64,7 @@ Options
 
   console.log('Starting development server...')
 
-  const urls = prepareUrls('http', host, port, config.publicPath.slice(0, -1))
+  const urls = prepareUrls('http', host, port, '')
 
   let start = Date.now()
 
@@ -103,7 +103,6 @@ Options
   app.use(
     webpackDevMiddleware(devCompiler, {
       serverSideRender: true,
-      publicPath: '/_build/',
       stats: 'none',
     })
   )

@@ -28,7 +28,7 @@ exports.loadConfig = async function loadConfig() {
     rootDirectory,
     appConfig.appDirectory || 'app'
   )
-  const publicPath = appConfig.publicPath || '/'
+  const publicPath = appConfig.publicPath || '/_build/'
   const entryServer = path.resolve(
     rootDirectory,
     appDirectory,

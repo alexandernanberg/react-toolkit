@@ -2,9 +2,6 @@ import { createContext, useContext, useMemo } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { StaticRouter } from 'react-router-dom/server'
 
-// eslint-disable-next-line camelcase
-__webpack_public_path__ = `/_build/`
-
 const isServer = !(typeof window !== 'undefined')
 
 const Router = isServer ? StaticRouter : BrowserRouter
@@ -50,7 +47,7 @@ export function Links() {
   return Object.entries(context.buildManifest)
     .filter(([, src]) => src.endsWith('.css'))
     .map(([key, src]) => (
-      <link key={key} href={`/_build${encodeURI(src)}`} rel="stylesheet" />
+      <link key={key} href={encodeURI(src)} rel="stylesheet" />
     ))
 }
 
@@ -68,7 +65,7 @@ export function Scripts() {
       {Object.entries(context.buildManifest)
         .filter(([, src]) => src.endsWith('.js'))
         .map(([key, src]) => (
-          <script key={key} src={`/_build${encodeURI(src)}`} async />
+          <script key={key} src={encodeURI(src)} async />
         ))}
     </>
   )
