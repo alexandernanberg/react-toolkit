@@ -116,8 +116,12 @@ module.exports = function createWebpackConfig({
       !isServer &&
         new MiniCssExtractPlugin({
           experimentalUseImportModule: true,
-          filename: 'static/css/[contenthash].css',
-          chunkFilename: 'static/css/[contenthash].css',
+          filename: isDev
+            ? 'static/css/[name].css'
+            : 'static/css/[name].[contenthash].css',
+          chunkFilename: isDev
+            ? 'static/css/[id].css'
+            : 'static/css/[id].[contenthash].css',
           ignoreOrder: true,
         }),
       // Generate an asset manifest file with the following content:
