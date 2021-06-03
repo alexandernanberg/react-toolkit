@@ -15,7 +15,7 @@ const useIsomorphicEffect =
   typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 let hydrating = true
-function ClientOnly({ children }) {
+function ClientOnly({ children, fallback = null }) {
   const [mounted, setMounted] = useState(!hydrating)
 
   useIsomorphicEffect(() => {
@@ -23,7 +23,7 @@ function ClientOnly({ children }) {
     setMounted(true)
   }, [])
 
-  return mounted ? children : null
+  return mounted ? children : fallback
 }
 
 export default function App() {
@@ -60,7 +60,7 @@ export default function App() {
             element={
               <>
                 <h1>Index</h1>
-                <ClientOnly>
+                <ClientOnly fallback="Loading...">
                   <div>Only on the client</div>
                 </ClientOnly>
               </>
