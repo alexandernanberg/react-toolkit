@@ -16,19 +16,23 @@ exports.loadConfig = async function loadConfig() {
     }
   }
 
-  const buildDirectory = path.resolve(
-    rootDirectory,
-    appConfig.buildDirectory || 'build'
-  )
   const publicDirectory = path.resolve(
     rootDirectory,
     appConfig.publicDirectory || 'public'
+  )
+  const assetsBuildDirectory = path.resolve(
+    rootDirectory,
+    appConfig.assetsBuildDirectory || 'public/build'
+  )
+  const serverBuildDirectory = path.resolve(
+    rootDirectory,
+    appConfig.serverBuildDirectory || 'build'
   )
   const appDirectory = path.resolve(
     rootDirectory,
     appConfig.appDirectory || 'app'
   )
-  const publicPath = appConfig.publicPath || '/_build/'
+  const publicPath = appConfig.publicPath || '/build/'
   const entryServer = path.resolve(
     rootDirectory,
     appDirectory,
@@ -43,7 +47,8 @@ exports.loadConfig = async function loadConfig() {
 
   return {
     rootDirectory,
-    buildDirectory,
+    serverBuildDirectory,
+    assetsBuildDirectory,
     publicDirectory,
     appDirectory,
     publicPath,

@@ -58,10 +58,13 @@ Options
   }
 
   const previousFileSizes = await measureFileSizesBeforeBuild(
-    config.buildDirectory
+    config.assetsBuildDirectory
   )
 
-  fs.emptyDirSync(config.buildDirectory)
+  await Promise.all([
+    fs.emptyDir(config.serverBuildDirectory),
+    fs.emptyDir(config.assetsBuildDirectory),
+  ])
 
   const start = Date.now()
 
@@ -76,9 +79,9 @@ Options
       if (!analyzeBundle) {
         console.log('File sizes after gzip:\n')
         printFileSizesAfterBuild(
-          stats,
+          stats.stats[1],
           previousFileSizes,
-          config.buildDirectory,
+          config.assetsBuildDirectory,
           WARN_AFTER_BUNDLE_GZIP_SIZE,
           WARN_AFTER_CHUNK_GZIP_SIZE
         )

@@ -31,16 +31,18 @@ module.exports = function createWebpackConfig({
       ...(isServer && { 'entry.server': config.entryServer }),
     },
     output: {
-      path: config.buildDirectory,
+      path: isServer
+        ? config.serverBuildDirectory
+        : config.assetsBuildDirectory,
       pathinfo: isDev,
       library: isServer ? undefined : '_N_E',
       libraryTarget: isServer ? 'commonjs2' : 'assign',
       filename: isServer
         ? '[name].js'
-        : `static/chunks/[name]${isDev ? '' : '-[contenthash]'}.js`,
+        : `chunks/[name]${isDev ? '' : '.[contenthash]'}.js`,
       chunkFilename: isServer
         ? '[name].js'
-        : `static/chunks/${isDev ? '[name]' : '[name].[contenthash]'}.js`,
+        : `chunks/[name]${isDev ? '' : '.[contenthash]'}.js`,
       publicPath: config.publicPath,
     },
     resolve: {
@@ -116,12 +118,8 @@ module.exports = function createWebpackConfig({
       !isServer &&
         new MiniCssExtractPlugin({
           experimentalUseImportModule: true,
-          filename: isDev
-            ? 'static/css/[name].css'
-            : 'static/css/[name].[contenthash].css',
-          chunkFilename: isDev
-            ? 'static/css/[id].css'
-            : 'static/css/[id].[contenthash].css',
+          filename: isDev ? 'css/[name].css' : 'css/[name].[contenthash].css',
+          chunkFilename: isDev ? 'css/[id].css' : 'css/[id].[contenthash].css',
           ignoreOrder: true,
         }),
       // Generate an asset manifest file with the following content:

@@ -5,6 +5,9 @@ const arg = require('arg')
 const express = require('express')
 const compression = require('compression')
 const { createRequestHandler } = require('../express')
+const { injectGlobals } = require('../server/globals')
+
+injectGlobals()
 
 const HOST = '0.0.0.0'
 const PORT = 3000
@@ -48,8 +51,10 @@ Options
 
   app.use(compression())
 
-  app.use(express.static('static'))
-  app.get('*', createRequestHandler())
+  app.use(express.static('public', { maxAge: '1h' }))
+  app.use(express.static('public/build', { immutable: true, maxAge: '1y' }))
+
+  app.all('*', await createRequestHandler())
 
   app.listen(port, () => {
     console.log('Ready on http://localhost:3000')

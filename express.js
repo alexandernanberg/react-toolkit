@@ -1,21 +1,23 @@
 const path = require('path')
-const { Headers } = require('whatwg-fetch')
-const paths = require('./config/paths')
+const { Headers } = require('./server/fetch')
+const { loadConfig } = require('./server/config')
+const { createServerHandoffString } = require('./server/server-handoff')
 
 function expressReqToRequest(req) {
   const headers = new Headers(Object.entries(req.headers))
   return new Request(req.url, { headers, method: req.method })
 }
 
-function createRequestHandler() {
+async function createRequestHandler() {
+  const config = await loadConfig()
   // eslint-disable-next-line import/no-dynamic-require
-  const requestHandler = require(path.join(
-    paths.buildDirectory,
+  const serverEntryModule = require(path.join(
+    config.serverBuildDirectory,
     'entry.server.js'
-  )).default
+  ))
   // eslint-disable-next-line import/no-dynamic-require
   const buildManifest = require(path.join(
-    paths.buildDirectory,
+    config.assetsBuildDirectory,
     'build-manifest.json'
   ))
 
@@ -23,20 +25,19 @@ function createRequestHandler() {
     try {
       const request = expressReqToRequest(req)
 
-      // TODO: Clean this up
-      if (request.url.startsWith('/_build/')) {
-        res
-          .status(200)
-          .type('js')
-          .sendFile(
-            path.join(paths.buildDirectory, req.url.replace('/_build', ''))
-          )
-        return
-      }
-
-      const response = requestHandler(request, 200, new Headers(), {
+      const serverHandoff = {
         buildManifest,
-      })
+      }
+      const entryContext = {
+        ...serverHandoff,
+        serverHandoffString: createServerHandoffString(serverHandoff),
+      }
+      const response = await serverEntryModule.default(
+        request,
+        200,
+        new Headers(),
+        entryContext
+      )
 
       const markup = await response.text()
       res

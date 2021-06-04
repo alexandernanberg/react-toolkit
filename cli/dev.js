@@ -15,6 +15,7 @@ const checkRequiredFiles = require('../server/verify-required-files')
 const { loadConfig } = require('../server/config')
 const { injectGlobals } = require('../server/globals')
 const compiler = require('../server/compiler')
+const { createServerHandoffString } = require('../server/server-handoff')
 
 injectGlobals()
 
@@ -100,6 +101,9 @@ Options
 
   app.use(compression())
 
+  app.use(express.static('public', { maxAge: '1h' }))
+  app.use(express.static('public/build', { immutable: true, maxAge: '1y' }))
+
   app.use(
     webpackDevMiddleware(devCompiler, {
       serverSideRender: true,
@@ -109,27 +113,37 @@ Options
 
   app.use(webpackHotMiddleware(devCompiler.compilers[1], { log: false }))
 
-  app.use(async (req, res) => {
+  app.all('*', async (req, res) => {
     try {
       const { devMiddleware } = res.locals.webpack
       const { outputFileSystem } = devMiddleware
 
       const requireFromMemory = patchRequire(outputFileSystem)
-      const requestHandler = requireFromMemory(
-        path.join(config.buildDirectory, 'entry.server.js')
-      ).default
+      const serverEntryModule = requireFromMemory(
+        path.join(config.serverBuildDirectory, 'entry.server.js')
+      )
 
       const buildManifest = JSON.parse(
         outputFileSystem.readFileSync(
-          path.join(config.buildDirectory, 'build-manifest.json'),
+          path.join(config.assetsBuildDirectory, 'build-manifest.json'),
           'utf-8'
         )
       )
 
       const request = expressReqToRequest(req)
-      const response = await requestHandler(request, 200, new Headers(), {
+      const serverHandoff = {
         buildManifest,
-      })
+      }
+      const entryContext = {
+        ...serverHandoff,
+        serverHandoffString: createServerHandoffString(serverHandoff),
+      }
+      const response = await serverEntryModule.default(
+        request,
+        200,
+        new Headers(),
+        entryContext
+      )
 
       const markup = await response.text()
 
