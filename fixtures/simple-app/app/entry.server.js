@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server'
 import { Response } from 'react-toolkit/loader'
-import { ContextProvider } from 'react-toolkit/react'
+import { EntryServer } from 'react-toolkit/react'
 import { ServerStyleSheet } from 'styled-components'
 import App from './root'
 import StylesheetContext from './stylesheet-context'
@@ -17,9 +17,9 @@ export default async function handleRequest(
   renderToString(
     sheet.collectStyles(
       <StylesheetContext.Provider value={null}>
-        <ContextProvider url={request.url} context={context}>
+        <EntryServer url={request.url} context={context}>
           <App />
-        </ContextProvider>
+        </EntryServer>
       </StylesheetContext.Provider>
     )
   )
@@ -28,9 +28,9 @@ export default async function handleRequest(
 
   const markup = renderToString(
     <StylesheetContext.Provider value={styles}>
-      <ContextProvider url={request.url} context={context}>
+      <EntryServer url={request.url} context={context}>
         <App />
-      </ContextProvider>
+      </EntryServer>
     </StylesheetContext.Provider>
   )
 

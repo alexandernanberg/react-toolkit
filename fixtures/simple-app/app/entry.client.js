@@ -1,10 +1,10 @@
 import ReactDOM from 'react-dom'
-import { ContextProvider } from 'react-toolkit/react'
+import { EntryBrowser } from 'react-toolkit/react'
 import App from './root'
 
 ReactDOM.hydrate(
-  <ContextProvider>
+  <EntryBrowser>
     <App />
-  </ContextProvider>,
+  </EntryBrowser>,
   document
 )
