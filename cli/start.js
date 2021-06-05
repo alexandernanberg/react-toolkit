@@ -49,6 +49,7 @@ Options
 
   const app = express()
 
+  app.disable('x-powered-by')
   app.use(compression())
 
   app.use(express.static('public', { maxAge: '1h' }))
