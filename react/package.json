@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "main": "../dist/client/index.js",
+  "typings": "../dist/client/index.d.ts"
+}

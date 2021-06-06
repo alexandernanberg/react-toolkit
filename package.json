@@ -18,7 +18,10 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "yarn build:client && tsc",
+    "build:client": "babel 'client' -d dist/client -x '.tsx'",
+    "dev": "babel 'client' -d dist/client -x '.tsx' -w"
   },
   "bin": {
     "react-toolkit": "cli.js"
@@ -30,7 +33,8 @@
     "cli",
     "config",
     "lib",
-    "dist"
+    "dist",
+    "react"
   ],
   "peerDependencies": {
     "history": "^5.0.0",
@@ -49,6 +53,8 @@
     "@babel/preset-react": "^7.12.13",
     "@babel/runtime": "^7.13.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
     "arg": "^5.0.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
@@ -82,7 +88,7 @@
     "@types/react": "^17.0.9",
     "@types/webpack": "^5.28.0",
     "eslint": "^7.22.0",
-    "eslint-config-alexandernanberg": "^1.12.0",
+    "eslint-config-alexandernanberg": "^2.0.0",
     "history": "^5.0.0",
     "prettier": "^2.2.1",
     "react": "^17.0.1",

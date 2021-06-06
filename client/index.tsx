@@ -2,16 +2,42 @@ import { createContext, useContext, useMemo } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { StaticRouter } from 'react-router-dom/server'
 
-const Context = createContext()
+export interface EntryContextType {
+  serverHandoffString: string
+  buildManifest: string
+}
 
-function Entry({ context, children }) {
+const Context = createContext<EntryContextType | null>(null)
+
+function useEntryContext() {
+  const context = useContext(Context)
+  if (!context) {
+    throw new Error('`useEntryContext` must be rendered in `EntryContext`')
+  }
+  return context
+}
+
+interface EntryProps {
+  context: EntryContextType
+  children: React.ReactNode
+}
+
+function Entry({ context, children }: EntryProps) {
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
-export function EntryBrowser({ children }) {
+export interface EntryBrowserProps {
+  children: React.ReactNode
+}
+
+export function EntryBrowser({ children }: EntryBrowserProps) {
   const context = useMemo(() => {
-    const serverHandoffString = document.getElementById('__context__')
-      .textContent
+    const serverHandoffString =
+      document.getElementById('__context__')?.textContent
+
+    if (!serverHandoffString) {
+      throw new Error('Sever handoff script element was not found')
+    }
 
     const entryContext = JSON.parse(serverHandoffString)
     entryContext.serverHandoffString = serverHandoffString
@@ -25,7 +51,13 @@ export function EntryBrowser({ children }) {
   )
 }
 
-export function EntryServer({ url, context, children }) {
+export interface EntryServerProps {
+  url: string
+  context: EntryContextType
+  children: React.ReactNode
+}
+
+export function EntryServer({ url, context, children }: EntryServerProps) {
   return (
     <StaticRouter location={url}>
       <Entry context={context}>{children}</Entry>
@@ -38,7 +70,7 @@ export function Meta() {
 }
 
 export function Links() {
-  const context = useContext(Context)
+  const context = useEntryContext()
 
   return Object.entries(context.buildManifest)
     .filter(([, src]) => src.endsWith('.css'))
@@ -48,7 +80,7 @@ export function Links() {
 }
 
 export function Scripts() {
-  const { serverHandoffString, buildManifest } = useContext(Context)
+  const { serverHandoffString, buildManifest } = useEntryContext()
 
   return (
     <>

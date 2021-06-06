@@ -32,6 +32,7 @@ module.exports = (api) => {
           runtime: 'automatic',
         },
       ],
+      [require.resolve('@babel/preset-typescript')],
     ].filter(Boolean),
     plugins: [
       [
