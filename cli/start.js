@@ -9,10 +9,9 @@ const { injectGlobals } = require('../server/globals')
 
 injectGlobals()
 
-const HOST = '0.0.0.0'
 const PORT = 3000
 
-module.exports = async function dev(argv) {
+module.exports = async function start(argv) {
   const args = arg(
     {
       // Types
@@ -38,13 +37,11 @@ Usage
 
 Options
   --port, -p      A port number on which to start the application
-  --hostname, -H  Hostname on which to start the application
   --help, -h      Displays this message
 `)
     process.exit(0)
   }
 
-  const host = args['--hostname'] || HOST
   const port = args['--port'] || PORT
 
   const app = express()
@@ -58,6 +55,6 @@ Options
   app.all('*', await createRequestHandler())
 
   app.listen(port, () => {
-    console.log('Ready on http://localhost:3000')
+    console.log(`Ready on http://localhost:${port}`)
   })
 }
