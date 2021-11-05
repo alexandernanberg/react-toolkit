@@ -68,7 +68,7 @@ exports.watch = async function watch(
   })
 
   compiler.hooks.done.tap('done', (stats) => {
-    const statsData = stats.toJson('errors-warnings')
+    const statsData = stats.toJson({ preset: 'errors-warnings' })
     const messages = formatWebpackMessages(statsData)
 
     if (stats.hasErrors()) {
@@ -128,7 +128,7 @@ exports.run = async function run(
         process.exit(1)
       }
 
-      const statsData = stats.toJson('errors-warnings')
+      const statsData = stats.toJson({ preset: 'errors-warnings' })
       const messages = formatWebpackMessages(statsData)
 
       if (stats.hasErrors()) {
