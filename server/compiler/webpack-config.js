@@ -16,6 +16,9 @@ module.exports = function createWebpackConfig({
   analyzeBundle = false,
   reactProductionProfiling = false,
 }) {
+  /**
+   * @type import('webpack').Configuration
+   */
   const webpackConfig = {
     name: isServer ? 'server' : 'client',
     target: isServer ? 'node' : 'web',

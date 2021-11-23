@@ -40,7 +40,7 @@
     "history": "^5.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^6.0.0-beta.0"
+    "react-router-dom": "^6.0.0"
   },
   "dependencies": {
     "@babel/cli": "^7.13.10",
@@ -53,8 +53,6 @@
     "@babel/preset-react": "^7.12.13",
     "@babel/runtime": "^7.13.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
-    "@typescript-eslint/parser": "^4.26.0",
     "arg": "^5.0.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
@@ -87,13 +85,13 @@
     "@babel/preset-typescript": "^7.13.0",
     "@types/react": "^17.0.9",
     "@types/webpack": "^5.28.0",
-    "eslint": "^7.22.0",
-    "eslint-config-alexandernanberg": "^2.0.0",
+    "eslint": "^8.3.0",
+    "eslint-config-alexandernanberg": "^3.1.4",
     "history": "^5.0.0",
     "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^6.0.0-beta.0",
+    "react-router-dom": "^6.0.0",
     "typescript": "^4.3.2"
   }
 }
